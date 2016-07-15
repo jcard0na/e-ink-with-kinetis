@@ -10,6 +10,13 @@
  * Code
  ******************************************************************************/
 
+
+port_pin_config_t port_pin_output_high_drive= {
+   .pullSelect = kPORT_PullDisable,
+   .driveStrength = kPORT_HighDriveStrength,
+   .mux = kPORT_MuxAsGpio
+};
+
 gpio_pin_config_t pin_as_output_low = { kGPIO_DigitalOutput, 0 };
 gpio_pin_config_t pin_as_output_high = { kGPIO_DigitalOutput, 1 };
 gpio_pin_config_t pin_as_input = { kGPIO_DigitalInput, 0 };
@@ -30,6 +37,11 @@ void BOARD_InitPins(void)
     /* Initialize pins used for e-ink below */
     /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortD);
+
+    /* e-ink use a high-strength gpio on the same header for power*/
+    PORT_SetPinConfig(PORTD, 7u, &port_pin_output_high_drive);
+    GPIO_PinInit(GPIOD, 7u, &pin_as_output_high);
+
     /* e-ink D/C output */
     PORT_SetPinMux(PORTD, 2u, kPORT_MuxAsGpio);
 
@@ -57,6 +69,7 @@ void BOARD_InitPins(void)
     /* e-ink spi1_mosi */
     PORT_SetPinMux(PORTD, 6u, kPORT_MuxAlt2);
 #endif
+
 
     /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortE);
