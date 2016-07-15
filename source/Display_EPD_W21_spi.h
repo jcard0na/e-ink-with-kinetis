@@ -18,7 +18,7 @@
 #define EPD_W21_CS_1	GPIO_WritePinOutput(GPIOD, 4u, 1)
 
 #define EPD_W21_DC_0	GPIO_WritePinOutput(GPIOD, 2u, 0)
-#define EPD_W21_DC_1	GPIO_WritePinOutput(GPIOE, 2u, 1)
+#define EPD_W21_DC_1	GPIO_WritePinOutput(GPIOD, 2u, 1)
 
 #define EPD_W21_RST_0	GPIO_WritePinOutput(GPIOA, 13u, 0)
 #define EPD_W21_RST_1	GPIO_WritePinOutput(GPIOA, 13u, 1)
