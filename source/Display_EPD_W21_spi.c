@@ -122,7 +122,7 @@ void EPD_W21_WriteDispRam(unsigned char XSize,unsigned int YSize,
 	{
 		for(j=0;j<XSize;j++)
 		{
-			SPI_Write(*Dispbuff);
+			SPI_Write(~(*Dispbuff));
 			Dispbuff++;
 		}
 	}
