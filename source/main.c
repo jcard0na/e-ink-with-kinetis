@@ -23,6 +23,7 @@ int main(void) {
   BOARD_InitDebugConsole();
 
   u8g_Init(&u8g, &xGDEP015OC1u8gDevice);
+  u8g_InitCom(&u8g, &xGDEP015OC1u8gDevice, 0);
 
   for(;;) { /* Infinite loop to avoid leaving the main function */
     __asm("NOP"); /* something to use as a breakpoint stop while looping */

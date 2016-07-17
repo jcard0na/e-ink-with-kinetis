@@ -8,7 +8,7 @@
   All rights reserved.
 */
 
-#include "u8g_bcm2073x.h"
+#include "u8g_kinetis.h"
 
 void u8g_Delay(uint16_t val)
 {
