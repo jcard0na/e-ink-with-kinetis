@@ -122,16 +122,22 @@ static uint8_t u8g_com_fn (u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_p
             EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
             EPD_W21_POWERON();
 
-            // TODO: this is just a call to EPD_W21_SetRamArea + EPD_W21_SetRamPointer.  Replace
+            // Initialize with striped pattern
             part_display(0x00,0x18,0xc7,0x00,0x00,0x00);    // set ram
-            // TODO: this is just EPD_W21_WriteDispRam. Replace
-            EPD_W21_UpdataDisplay((unsigned char *)logo,200,200);
-            // TODO: test what is the difference between Update1 and Update
+            EPD_W21_WriteDispRamMono(200,200, 0xf0);
             EPD_W21_Update1();
             driver_delay_xms(100000);
-            /* apparently partial updates need to be written twice ??? */
+            /* confirmed experimentally: partial updates need to be written twice, contents
+             * of second write is irrelevant, only size matters */
+            EPD_W21_WriteDispRamMono(200,200, 0xf0);
+            driver_delay_xms(10000);
+
+            // Followed by logo
             part_display(0x00,0x18,0xc7,0x00,0x00,0x00);    // set ram
-            EPD_W21_UpdataDisplay((unsigned char *)logo,200,200);
+            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
+            EPD_W21_Update1();
+            driver_delay_xms(100000);
+            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
             driver_delay_xms(10000);
             break;
 
