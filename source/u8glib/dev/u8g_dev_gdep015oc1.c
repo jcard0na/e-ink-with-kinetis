@@ -14,15 +14,15 @@
  * The GDEP015OC1 accepts 1-byte worth of pixels at a time, corresponding to 8
  * sequential pixels along the X (horizontal) axis.
  *
- * We divide the display into 4 pages of 200x50 pixels.
- * Therefore each page will be (200x50/8 =) 1250 bytes in size.
+ * We will use a single page for the entire display.
  *
  * Useful info: https://github.com/olikraus/u8glib/wiki/tpictureloop
  * */
 #include <stddef.h>
 
 
-#define ROWS_PER_PAGE 50
+#define ROWS_PER_PAGE 8
+#define ROWS_PER_PAGE_IN_BYTES ((ROWS_PER_PAGE + 7) / 8)                    /* i.e. 25 */
 #define GDEP015OC1_ROWS 200
 #define GDEP015OC1_COLUMNS 200
 #define GDEP015OC1_BYTES_PER_LINE ((GDEP015OC1_COLUMNS + 7) / 8)    /* i.e. 25 */
@@ -37,7 +37,7 @@ const unsigned char LUTDefault_part[31] = {
 
 
 
-static uint8_t cgram_[ROWS_PER_PAGE * GDEP015OC1_BYTES_PER_LINE];    /* i.e. 1250 bytes */
+static uint8_t cgram_[ROWS_PER_PAGE * GDEP015OC1_BYTES_PER_LINE];
 
 static u8g_pb_t pb = {
     { /* u8g_page_t */
@@ -91,28 +91,18 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
      Select a page to update.  The x coordinate is in byte units
      (0 to 200/8 - 1) = 0 - 0x18
      The y coordinate is in pixels, 0-199 = 0-0xc7
-     The second value for y is the most significant byte, and is always
+     The args 4th and 6th are y's the most significant byte, always
      zero for this small display
-
-     <--- 0x18 --->
-          ^
-          |
-          |
-         0xc7
-          |
-          |
-          v
-    */
-
-    part_display(0x00, 0x18, end_line, 0x00, line, 0x00);    // set ram
-    /*EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);*/
-    EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, line);
+     */
+    /*part_display(0x00, 0x18, GDEP015OC1_ROWS - line, 0x00, GDEP015OC1_ROWS - end_line - 1, 0x00);    // set ram*/
+    part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
+    EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
     EPD_W21_Update1();
-    driver_delay_xms(100000);
-    part_display(0x00, 0x18, end_line, 0x00, line, 0x00);    // set ram
-    /*EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);*/
-    EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, line);
     driver_delay_xms(10000);
+    /*part_display(0x00, 0x18, GDEP015OC1_ROWS - line, 0x00, GDEP015OC1_ROWS - end_line - 1, 0x00);    // set ram*/
+    part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
+    EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
+    driver_delay_xms(1000);
 /*
     spi_cs_assert(DISPLAY);
 
@@ -137,37 +127,9 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
 static uint8_t u8g_com_fn (u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_ptr)
 {
     uint8_t rc = 0;
-    int i, j, k;
 
     switch (msg) {
         case U8G_COM_MSG_INIT:
-            EPD_W21_Init();            // display
-            EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
-            EPD_W21_POWERON();
-
-            // draw blinds
-            for(i = 0;i < (GDEP015OC1_ROWS/ROWS_PER_PAGE); i++)
-            {
-                k=GDEP015OC1_COLUMNS-i*ROWS_PER_PAGE-4;
-                j=k-ROWS_PER_PAGE;
-                part_display(0x0, 0x18, k, 0, j, 0);    // set ram
-                EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
-                EPD_W21_Update1();
-                driver_delay_xms(20000);
-                /* confirmed experimentally: partial updates need to be written twice */
-                part_display(0x0, 0x18, k, 0, j, 0);    // set ram
-                EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
-                driver_delay_xms(10000);
-            }
-
-            // Followed by logo
-            part_display(0x00,0x18,0xc7,0x00,0x00,0x00);    // set ram
-            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
-            EPD_W21_Update1();
-            driver_delay_xms(100000);
-            part_display(0x00,0x18,0xc7,0x00,0x00,0x00);    // set ram
-            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
-            driver_delay_xms(10000);
             break;
 
 
@@ -195,6 +157,7 @@ static uint8_t u8g_com_fn (u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_p
 static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg)
 {
     int rc = 0;
+    int i, j, k;
 
     switch (msg) {
         default:
@@ -205,7 +168,40 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
             break;
         case U8G_DEV_MSG_INIT: {
+            EPD_W21_Init();            // display
+            EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
+            EPD_W21_POWERON();
+
+            /* All these fireworks are unnecessary. */
+            /* Blinds */
+#if 0
+            for(i = 0;i < (GDEP015OC1_ROWS/ROWS_PER_PAGE); i++)
+            {
+                j= i*ROWS_PER_PAGE;     // first line
+                k= (i + 1) * ROWS_PER_PAGE - 1;  // last line
+                part_display(0x0, 0x18, k, 0, j, 0);    // set ram
+                EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
+                EPD_W21_Update1();
+                driver_delay_xms(2000);
+                /* confirmed experimentally: partial updates need to be written twice */
+                part_display(0x0, 0x18, k, 0, j, 0);    // set ram
+                EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
+                driver_delay_xms(1000);
+            }
+#endif
+
+            /* Followed by logo */
+            part_display(0x00,0x18,0x00,0x00,0xc7,0x00);    // set ram
+            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
+            EPD_W21_Update1();
+            driver_delay_xms(100000);
+            part_display(0x00,0x18,0x00,0x00,0xc7,0x00);    // set ram
+            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
+            driver_delay_xms(10000);
+            /* End of fireworks */
+
             memset(cgram_, 0, sizeof(cgram_));
+            rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
             break;
         }
         case U8G_DEV_MSG_PAGE_NEXT: {

@@ -85,7 +85,6 @@ void display_watch(unsigned char hour, unsigned char minute, unsigned char secon
 void display_init()
 {
     u8g_Init(&u8g, &xGDEP015OC1u8gDevice);
-    u8g_InitCom(&u8g, &xGDEP015OC1u8gDevice, 0);
 }
 
 void display_off()
