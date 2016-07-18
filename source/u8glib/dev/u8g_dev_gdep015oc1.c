@@ -172,33 +172,20 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
             EPD_W21_POWERON();
 
-            /* All these fireworks are unnecessary. */
-            /* Blinds */
-#if 0
+            /* Clear display to prevent fadeouts */
             for(i = 0;i < (GDEP015OC1_ROWS/ROWS_PER_PAGE); i++)
             {
                 j= i*ROWS_PER_PAGE;     // first line
                 k= (i + 1) * ROWS_PER_PAGE - 1;  // last line
-                part_display(0x0, 0x18, k, 0, j, 0);    // set ram
+                part_display(0x0, 0x18, j, 0, k, 0);    // set ram
                 EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
                 EPD_W21_Update1();
                 driver_delay_xms(2000);
                 /* confirmed experimentally: partial updates need to be written twice */
-                part_display(0x0, 0x18, k, 0, j, 0);    // set ram
+                part_display(0x0, 0x18, j, 0, k, 0);    // set ram
                 EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
                 driver_delay_xms(1000);
             }
-#endif
-
-            /* Followed by logo */
-            part_display(0x00,0x18,0x00,0x00,0xc7,0x00);    // set ram
-            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
-            EPD_W21_Update1();
-            driver_delay_xms(100000);
-            part_display(0x00,0x18,0x00,0x00,0xc7,0x00);    // set ram
-            EPD_W21_WriteDispRam(200, 200, (unsigned char *)logo);
-            driver_delay_xms(10000);
-            /* End of fireworks */
 
             memset(cgram_, 0, sizeof(cgram_));
             rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
