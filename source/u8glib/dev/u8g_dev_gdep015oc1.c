@@ -28,11 +28,20 @@
 
 const unsigned char LUTDefault_part[31] = {
         0x32,   // command
-    // this is undocumented voodoo from the vendor...
+    // this is undocumented voodoo from the vendor for partial screen update mode
     0x10, 0x18, 0x18, 0x08, 0x18, 0x18, 0x08, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x13, 0x14, 0x44, 0x12, 0x00, 0x00 ,0x00, 0x00, 0x00, 0x00
 };
+
+const unsigned char LUTDefault_full[31] = {
+        0x32,   // command
+    // this is undocumented voodoo from the vendor for full screen update mode
+    0x02, 0x02, 0x01, 0x11, 0x12, 0x12, 0x22, 0x22, 0x66, 0x69,
+    0x69, 0x59, 0x58, 0x99, 0x99, 0x88, 0x00, 0x00, 0x00, 0x00,
+    0xF8, 0xB4, 0x13, 0x51, 0x35, 0x51, 0x51, 0x19, 0x01, 0x00
+};
+
 
 
 
@@ -64,17 +73,6 @@ void driver_delay_xms(unsigned long xms)
     }
 }
 
-static uint8_t reverse_bits (uint8_t i)
-{
-  uint8_t rv;
-  rv = i;
-  rv = ((rv & 0xaa) >> 1) | ((rv & 0x55) << 1);
-  rv = ((rv & 0xcc) >> 2) | ((rv & 0x33) << 2);
-  rv = ((rv & 0xf0) >> 4) | ((rv & 0x0f) << 4);
-  return rv;
-}
-
-
 static int update_lines (int start_line, int num_lines, const uint8_t * line_data)
 {
     int line = start_line;
@@ -93,30 +91,14 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
      The args 4th and 6th are y's the most significant byte, always
      zero for this small display
      */
-    /*part_display(0x00, 0x18, GDEP015OC1_ROWS - line, 0x00, GDEP015OC1_ROWS - end_line - 1, 0x00);    // set ram*/
+
     part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
     EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
     EPD_W21_Update1();
     driver_delay_xms(10000);
-    /*part_display(0x00, 0x18, GDEP015OC1_ROWS - line, 0x00, GDEP015OC1_ROWS - end_line - 1, 0x00);    // set ram*/
     part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
     EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
     driver_delay_xms(1000);
-/*
-    spi_cs_assert(DISPLAY);
-
-    while (line < end_line) {
-        cmd[1] = reverse_bits(line);
-        __spi_write_buf(cmd, sizeof(cmd));
-        __spi_write_buf(dp, GDEP015OC1_BYTES_PER_LINE);
-        dp += GDEP015OC1_BYTES_PER_LINE;
-        ++line;
-        cmd[0] = 0;
-    }
-    cmd[1] = 0;
-    __spi_write_buf(cmd, sizeof(cmd));
-    spi_cs_deassert(DISPLAY);
-*/
 
     return 0;
 }
@@ -156,7 +138,6 @@ static uint8_t u8g_com_fn (u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_p
 static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg)
 {
     int rc = 0;
-    int i, j, k;
 
     switch (msg) {
         default:
@@ -168,23 +149,21 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             break;
         case U8G_DEV_MSG_INIT: {
             EPD_W21_Init();            // display
-            EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
+            EPD_W21_WirteLUT((unsigned char *)LUTDefault_full);
             EPD_W21_POWERON();
 
-            /* Clear display to prevent fadeouts */
-            for(i = 0;i < (GDEP015OC1_ROWS/ROWS_PER_PAGE); i++)
-            {
-                j= i*ROWS_PER_PAGE;     // first line
-                k= (i + 1) * ROWS_PER_PAGE - 1;  // last line
-                part_display(0x0, 0x18, j, 0, k, 0);    // set ram
-                EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
-                EPD_W21_Update1();
-                driver_delay_xms(2000);
-                /* confirmed experimentally: partial updates need to be written twice */
-                part_display(0x0, 0x18, j, 0, k, 0);    // set ram
-                EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, 0xff);    // white
-                driver_delay_xms(1000);
-            }
+            EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
+            EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0x00);
+            EPD_W21_Update();
+            driver_delay_xms(100000);
+
+            EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
+            EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0xff);
+            EPD_W21_Update();
+            driver_delay_xms(100000);
+
+            EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
+            EPD_W21_POWERON();
 
             memset(cgram_, 0, sizeof(cgram_));
             rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);

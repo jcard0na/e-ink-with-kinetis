@@ -74,7 +74,7 @@ static void draw_watch(void * notyet)
     }
 }
 
-static void draw_msgdots(void * notyet)
+static void draw_msgdots(int num)
 {
     unsigned int i;
     const int disc_radius = 10;
@@ -82,25 +82,12 @@ static void draw_msgdots(void * notyet)
     u8g_SetFont(&u8g, u8g_font_freedoomr10r);
     u8g_SetFontPosCenter(&u8g);
 
-    for (i = 0; i < ARRAY_SIZE(nhour); i++) {
+    for (i = 0; i < (num % (ARRAY_SIZE(nhour) + 1)); i++) {
         u8g_DrawDisc(&u8g, nhour[i].x, nhour[i].y, disc_radius, U8G_DRAW_ALL);
     }
 }
 
-static void draw_hands(int hh, int mm, int ss)
-{
-    /* draw hour hand */
-    u8g_DrawLine(&u8g, WIDTH/2,HEIGHT/2, hour[hh].x, hour[hh].y);
-
-    /* draw minute hand */
-    u8g_DrawLine(&u8g, WIDTH/2,HEIGHT/2, minsec[mm].x, minsec[mm].y);
-
-    /* draw second hand */
-    u8g_DrawLine(&u8g, WIDTH/2,HEIGHT/2, minsec[ss].x, minsec[ss].y);
-    u8g_DrawDisc(&u8g, minsec[ss].x, minsec[ss].y, 3, U8G_DRAW_ALL);
-}
-
-void display_watch(unsigned char hour, unsigned char minute, unsigned char second)
+void display_main(int num_messages)
 {
     u8g_FirstPage(&u8g);
 
@@ -112,7 +99,7 @@ void display_watch(unsigned char hour, unsigned char minute, unsigned char secon
         u8g_SetColorIndex(&u8g, 0);
         u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 8, U8G_DRAW_ALL);
         u8g_SetColorIndex(&u8g, 1);
-        draw_msgdots(NULL);
+        draw_msgdots(num_messages);
         u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 40, U8G_DRAW_ALL);
         u8g_SetColorIndex(&u8g, 0);
         u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 45, U8G_DRAW_ALL);
