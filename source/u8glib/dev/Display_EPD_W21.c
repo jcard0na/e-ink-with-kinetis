@@ -1,11 +1,11 @@
 /***********************************************************
 Copyright(C), Yk Technology
-FileName	: 
+FileName	:
 Author		: Yukewantong, Zhongxiaodong
 Date		  	: 2011/12/22
-Description	: 
+Description	:
 Version		: V1.0
-History		: 
+History		:
 --------------------------------
 2011/12/22: created
 2012/02/29: update the pvi's waveform(20C) as default
@@ -20,7 +20,7 @@ History		:
 unsigned char RamAreaX[3];	// X start and end
 unsigned char RamAreaY[5]; 	// Y start and end
 unsigned char RamPointerX[2];	// default (0,0)
-unsigned char RamPointerY[3]; 	
+unsigned char RamPointerY[3];
 
 unsigned char DispBuff[32];	// Display buffer
 unsigned char LUT[30];	// LUT buffer
@@ -28,7 +28,7 @@ unsigned char LUT[30];	// LUT buffer
 unsigned char GDOControl[]={0x01,0xC7,0x00,0x00}; //for 1.54inch
 unsigned char softstart[]={0x0c,0xd7,0xd6,0x9d};
 unsigned char Rambypass[] = {0x21,0x8f};		// Display update
-unsigned char MAsequency[] = {0x22,0xf0};		// clock 
+unsigned char MAsequency[] = {0x22,0xf0};		// clock
 unsigned char GDVol[] = {0x03,0x00};	// Gate voltage +15V/-15V
 unsigned char SDVol[] = {0x04,0x0a};	// Source voltage +15V/-15V
 unsigned char VCOMVol[] = {0x2c,0xa8};	// VCOM 7c
@@ -36,7 +36,7 @@ unsigned char BOOSTERFB[] = {0xf0,0x1f};	// Source voltage +15V/-15V
 unsigned char DummyLine[] = {0x3a,0x1a};	// 4 dummy line per gate
 unsigned char Gatetime[] = {0x3b,0x08};	// 2us per line
 unsigned char BorderWavefrom[] = {0x3c,0x33};	// Border
-unsigned char RamDataEntryMode[] = {0x11,0x01};	// Ram data entry mode
+unsigned char RamDataEntryMode[] = {0x11,0x03};	// Ram data entry mode
 //unsigned char RamDataEntryMode[] = {0x11,0x11};	// Ram data entry mode
 
 
@@ -71,7 +71,7 @@ void EPD_W21_SetRamPointer(unsigned char addrX,unsigned char addrY,unsigned char
 	RamPointerY[0] = 0x4f;
 	RamPointerY[1] = addrY;
 	RamPointerY[2] = addrY1;
-	
+
 	EPD_W21_Write(RamPointerX, sizeof(RamPointerX));
 	EPD_W21_Write(RamPointerY, sizeof(RamPointerY));
 }
@@ -83,36 +83,36 @@ void EPD_W21_SetRamPointer(unsigned char addrX,unsigned char addrY,unsigned char
 //Input	: none
 //Output: none
 //Return: none
-//Author: 
+//Author:
 //Date	: 2011/12/24
 //-------------------------------------------------------
 void EPD_W21_DispInit(void)
 {
 //	unsigned char Testvalue1[2] = {0x0c,0x13};
 //	unsigned char Testvalue2[2] = {0x3f,0x00};
-	
+
 	#ifdef DEBUG
-	DebugInfo("EPD_W21_DispInit()\n");	
+	DebugInfo("EPD_W21_DispInit()\n");
 	#endif
 
 //	EPD_W21_Write(Testvalue1, sizeof(Testvalue1));	// Power saving,20121116
 //	EPD_W21_Write(Testvalue2, sizeof(Testvalue2));
-	
+
 	EPD_W21_Write(GDOControl, sizeof(GDOControl));	// Pannel configuration, Gate selection
-	//DebugInfo("###0\n");	
+	//DebugInfo("###0\n");
        EPD_W21_Write(softstart, sizeof(softstart));	// X decrease, Y decrease
-	//DebugInfo("###1\n");	
+	//DebugInfo("###1\n");
 
 	//EPD_W21_Write(Rambypass, sizeof(Rambypass));	// RAM bypass setting
 //	EPD_W21_Write(MAsequency, sizeof(MAsequency));	// clock enable
 	//EPD_W21_Write(GDVol, sizeof(GDVol));			// Gate voltage setting
 	//EPD_W21_Write(SDVol, sizeof(SDVol));			// Source voltage setting
 	EPD_W21_Write(VCOMVol, sizeof(VCOMVol));		// VCOM setting
-	//DebugInfo("###2\n");	
+	//DebugInfo("###2\n");
 
 	//EPD_W21_Write(BOOSTERFB, sizeof(BOOSTERFB));	// Hi-V feedback selection
 	EPD_W21_Write(DummyLine, sizeof(DummyLine));	// dummy line per gate
-	//DebugInfo("###3\n");	
+	//DebugInfo("###3\n");
 
 	EPD_W21_Write(Gatetime, sizeof(Gatetime));		// Gage time setting
 	//EPD_W21_Write(BorderWavefrom, sizeof(BorderWavefrom));	// Border setting
@@ -120,16 +120,16 @@ void EPD_W21_DispInit(void)
 //	EPD_W21_WriteCMD_p1(0x0f,0x00);		// gate scan start
 
 	EPD_W21_Write(RamDataEntryMode, sizeof(RamDataEntryMode));	// X decrease, Y decrease
-	//DebugInfo("###4\n");	
+	//DebugInfo("###4\n");
 
 //	EPD_W21_SetRamArea(0x00, 0x11,0xab, 0x00);	// X-source area,Y-gage area
 //	EPD_W21_SetRamArea(0x00,0x0f,0x27,0x01,0x00,0x00);	// X-source area,Y-gage area
 	EPD_W21_SetRamArea(0x00,0x18,0xC7,0x00,0x00,0x00);	// X-source area,Y-gage area
-	//DebugInfo("###5\n");	
+	//DebugInfo("###5\n");
 
 //	EPD_W21_SetRamPointer(0x00,0xab);		// set ram
     EPD_W21_SetRamPointer(0x00,0xC7,0x00);	// set ram
-	//DebugInfo("###6\n");	
+	//DebugInfo("###6\n");
 
 }
 
@@ -141,14 +141,14 @@ void EPD_W21_Init(void)
 	driver_delay_xms(10000);
 	EPD_W21_RST_1;
 	driver_delay_xms(10000);
-	
+
 //	EPD_W21_DispInit();		// pannel configure
 
 //	EPD_W21_WirteLUT(LUTDefault);	// update wavefrom
-    
-	
+
+
 	EPD_W21_DispInit();		// pannel configure
-   	
+
 
 
 }
@@ -157,11 +157,11 @@ void EPD_W21_Init(void)
 
 //-------------------------------------------------------
 //Func	: EPD_W21_EnableChargepump
-//Desc	: 
+//Desc	:
 //Input	:
-//Output: 
-//Return: 
-//Author: 
+//Output:
+//Return:
+//Author:
 //Date	: 2011/12/24
 //-------------------------------------------------------
 void EPD_W21_EnableChargepump(void)
@@ -174,11 +174,11 @@ void EPD_W21_EnableChargepump(void)
 
 //-------------------------------------------------------
 //Func	: EPD_W21_DisableChargepump
-//Desc	: 
+//Desc	:
 //Input	:
-//Output: 
-//Return: 
-//Author: 
+//Output:
+//Return:
+//Author:
 //Date	: 2011/12/24
 //-------------------------------------------------------
 void EPD_W21_DisableChargepump(void)
@@ -190,11 +190,11 @@ void EPD_W21_DisableChargepump(void)
 
 //-------------------------------------------------------
 //Func	: EPD_W21_Update
-//Desc	: 
+//Desc	:
 //Input	:
-//Output: 
-//Return: 
-//Author: 
+//Output:
+//Return:
+//Author:
 //Date	: 2011/12/24
 //-------------------------------------------------------
 void EPD_W21_Update(void)
@@ -222,15 +222,15 @@ void EPD_W21_WriteRAM(void)
 
 //-------------------------------------------------------
 //Func	: EPD_W21_WirteLUT(unsigned char *LUTvalue)
-//Desc	: write the waveform to the dirver's ram 
+//Desc	: write the waveform to the dirver's ram
 //Input	: *LUTvalue, the wavefrom tabe address
 //Output: none
 //Return: none
-//Author: 
+//Author:
 //Date	: 2011/12/24
 //-------------------------------------------------------
 void EPD_W21_WirteLUT(unsigned char *LUTvalue)
-{	
+{
 	EPD_W21_Write(LUTvalue, 31);
 }
 
@@ -238,18 +238,18 @@ void EPD_W21_WirteLUT(unsigned char *LUTvalue)
 
 //-------------------------------------------------------
 //Func	: EPD_W21_UpdataDisplay
-//Desc	: updata the display 
+//Desc	: updata the display
 //Input	:
-//Output: 
-//Return: 
-//Author: 
+//Output:
+//Return:
+//Author:
 //Date	: 2012/3/13
 //-------------------------------------------------------
 /*
 void EPD_W21_UpdataDisplay(unsigned char *imgbuff)
 {
 	EPD_W21_WriteDispRam(128, 296, imgbuff);
-	//EPD_W21_WriteRAM();	
+	//EPD_W21_WriteRAM();
 	EPD_W21_Update();
 }
 */
