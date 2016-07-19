@@ -41,7 +41,6 @@
 #define U8G_I2C_WITH_NO_ACK
 
 static uint8_t u8g_i2c_err_code;
-static uint8_t u8g_i2c_opt;		/* U8G_I2C_OPT_NO_ACK */
 
 /*
   position values
@@ -66,16 +65,6 @@ uint8_t u8g_i2c_get_err_pos(void)
 {
   return u8g_i2c_err_pos;
 }
-
-static void u8g_i2c_set_error(uint8_t code, uint8_t pos)
-{
-  if ( u8g_i2c_err_code > 0 )
-    return;
-  u8g_i2c_err_code |= code;
-  u8g_i2c_err_pos = pos;
-}
-
-
 
 #if defined(__AVR__)
 #define U8G_ATMEGA_HW_TWI
