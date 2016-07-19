@@ -142,10 +142,8 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
     switch (msg) {
         default:
             /* Anything not specifically handled is delegated to the base function */
-            rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
             break;
         case U8G_DEV_MSG_GET_MODE:
-            rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
             break;
         case U8G_DEV_MSG_INIT: {
             EPD_W21_Init();            // display
@@ -166,19 +164,17 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             EPD_W21_POWERON();
 
             memset(cgram_, 0, sizeof(cgram_));
-            rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
             break;
         }
         case U8G_DEV_MSG_PAGE_NEXT: {
             /* this function just delegates to U8G_COM_MSG_WRITE_SEQ */
             rc = u8g_pb_WriteBuffer(&pb, u8g, dev);
-            if (rc) {
-                rc = u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
-            }
+            if (rc == 0)
+                return 0;
             break;
         }
     }
-    return rc;
+    return u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
 }
 
 u8g_dev_t xGDEP015OC1u8gDevice = { u8g_dev_fn, &pb, u8g_com_fn };
