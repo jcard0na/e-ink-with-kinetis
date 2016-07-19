@@ -23,7 +23,7 @@
 /* Supported options are 8, 32 or 200.  Larger sizes will require more memory
  * but update faster the display.
  */
-#define ROWS_PER_PAGE 8
+#define ROWS_PER_PAGE 200
 #define ROWS_PER_PAGE_IN_BYTES ((ROWS_PER_PAGE + 7) / 8)                    /* i.e. 25 */
 #define GDEP015OC1_ROWS 200
 #define GDEP015OC1_COLUMNS 200
@@ -78,7 +78,8 @@ void driver_delay_xms(unsigned long xms)
 
 static int update_lines (int start_line, int num_lines, const uint8_t * line_data)
 {
-    int line = start_line;
+#if (ROWS_PER_PAGE != GDEP015OC1_ROWS)
+	int line = start_line;
     int end_line;
 
     if (line < 0 || num_lines != ROWS_PER_PAGE) {
@@ -87,28 +88,19 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
 
     end_line = start_line + num_lines - 1;
 
-    /*
-     Select a page to update.  The x coordinate is in byte units
-     (0 to 200/8 - 1) = 0 - 0x18
-     The y coordinate is in pixels, 0-199 = 0-0xc7
-     The args 4th and 6th are y's the most significant byte, always
-     zero for this small display
-     */
-#if (ROWS_PER_PAGE == GDEP015OC1_ROWS)
-    EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
-    EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, (uint8_t *) line_data);
-    EPD_W21_Update();
-    driver_delay_xms(100000);
-#else
     part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
     EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
     EPD_W21_Update1();
     driver_delay_xms(10000);
     part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
     EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
-    driver_delay_xms(1000);
+#else
+    EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
+    EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, (uint8_t *) line_data);
+    EPD_W21_Update();
 #endif
 
+    driver_delay_xms(1000);
     return 0;
 }
 
@@ -186,16 +178,16 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             break;
         }
     }
-#ifdef ROWS_PER_PAGE == 8
+#if (ROWS_PER_PAGE == 8)
     return u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
-#elif ROWS_PER_PAGE == 16
-    return u8g_dev_pb16h1_base_fn(u8g, dev, msg, arg);
 #elif ROWS_PER_PAGE == 32
     return u8g_dev_pb32h1_base_fn(u8g, dev, msg, arg);
 #elif ROWS_PER_PAGE == 64
     return u8g_dev_pb200h1_base_fn(u8g, dev, msg, arg);
 #elif ROWS_PER_PAGE == 200
     return u8g_dev_pb200h1_base_fn(u8g, dev, msg, arg);
+#else
+    #error "Unsupported ROWS_PER_PAGE"
 #endif
 }
 

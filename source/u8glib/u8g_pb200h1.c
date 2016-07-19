@@ -54,7 +54,7 @@ void u8g_pb200h1_Clear(u8g_pb_t *b)
 {
   uint8_t *ptr = (uint8_t *)b->buf;
   uint8_t *end_ptr = ptr;
-  end_ptr += b->width*8;
+  end_ptr += b->width*25;
   do
   {
     *ptr++ = 0;
@@ -71,7 +71,6 @@ void u8g_pb200h1_Init(u8g_pb_t *b, void *buf, u8g_uint_t width)
 }
 
 
-/* limitation: total buffer must not exceed 2*256 bytes */
 void u8g_pb200h1_set_pixel(u8g_pb_t *b, u8g_uint_t x, u8g_uint_t y, uint8_t color_index)
 {
   register uint8_t mask;
@@ -79,6 +78,7 @@ void u8g_pb200h1_set_pixel(u8g_pb_t *b, u8g_uint_t x, u8g_uint_t y, uint8_t colo
   uint8_t *ptr = b->buf;
 
   y -= b->p.page_y0;
+
   tmp = b->width;
   tmp >>= 3;
   tmp *= y;
@@ -97,7 +97,6 @@ void u8g_pb200h1_set_pixel(u8g_pb_t *b, u8g_uint_t x, u8g_uint_t y, uint8_t colo
     mask ^=0xff;
     *ptr &= mask;
   }
-
 }
 
 
