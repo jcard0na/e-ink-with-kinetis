@@ -20,6 +20,9 @@
 #include <stddef.h>
 
 
+/* Supported options are 8, 32 or 200.  Larger sizes will require more memory
+ * but update faster the display.
+ */
 #define ROWS_PER_PAGE 8
 #define ROWS_PER_PAGE_IN_BYTES ((ROWS_PER_PAGE + 7) / 8)                    /* i.e. 25 */
 #define GDEP015OC1_ROWS 200
@@ -174,7 +177,17 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             break;
         }
     }
+#ifdef ROWS_PER_PAGE == 8
     return u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
+#elif ROWS_PER_PAGE == 16
+    return u8g_dev_pb16h1_base_fn(u8g, dev, msg, arg);
+#elif ROWS_PER_PAGE == 32
+    return u8g_dev_pb32h1_base_fn(u8g, dev, msg, arg);
+#elif ROWS_PER_PAGE == 64
+    return u8g_dev_pb200h1_base_fn(u8g, dev, msg, arg);
+#elif ROWS_PER_PAGE == 200
+    return u8g_dev_pb200h1_base_fn(u8g, dev, msg, arg);
+#endif
 }
 
 u8g_dev_t xGDEP015OC1u8gDevice = { u8g_dev_fn, &pb, u8g_com_fn };

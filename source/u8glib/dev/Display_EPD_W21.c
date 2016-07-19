@@ -37,7 +37,6 @@ unsigned char DummyLine[] = {0x3a,0x1a};	// 4 dummy line per gate
 unsigned char Gatetime[] = {0x3b,0x08};	// 2us per line
 unsigned char BorderWavefrom[] = {0x3c,0x33};	// Border
 unsigned char RamDataEntryMode[] = {0x11,0x03};	// Ram data entry mode
-//unsigned char RamDataEntryMode[] = {0x11,0x11};	// Ram data entry mode
 
 
 
@@ -88,49 +87,14 @@ void EPD_W21_SetRamPointer(unsigned char addrX,unsigned char addrY,unsigned char
 //-------------------------------------------------------
 void EPD_W21_DispInit(void)
 {
-//	unsigned char Testvalue1[2] = {0x0c,0x13};
-//	unsigned char Testvalue2[2] = {0x3f,0x00};
-
-	#ifdef DEBUG
-	DebugInfo("EPD_W21_DispInit()\n");
-	#endif
-
-//	EPD_W21_Write(Testvalue1, sizeof(Testvalue1));	// Power saving,20121116
-//	EPD_W21_Write(Testvalue2, sizeof(Testvalue2));
-
 	EPD_W21_Write(GDOControl, sizeof(GDOControl));	// Pannel configuration, Gate selection
-	//DebugInfo("###0\n");
-       EPD_W21_Write(softstart, sizeof(softstart));	// X decrease, Y decrease
-	//DebugInfo("###1\n");
-
-	//EPD_W21_Write(Rambypass, sizeof(Rambypass));	// RAM bypass setting
-//	EPD_W21_Write(MAsequency, sizeof(MAsequency));	// clock enable
-	//EPD_W21_Write(GDVol, sizeof(GDVol));			// Gate voltage setting
-	//EPD_W21_Write(SDVol, sizeof(SDVol));			// Source voltage setting
+    EPD_W21_Write(softstart, sizeof(softstart));	// voodoo
 	EPD_W21_Write(VCOMVol, sizeof(VCOMVol));		// VCOM setting
-	//DebugInfo("###2\n");
-
-	//EPD_W21_Write(BOOSTERFB, sizeof(BOOSTERFB));	// Hi-V feedback selection
 	EPD_W21_Write(DummyLine, sizeof(DummyLine));	// dummy line per gate
-	//DebugInfo("###3\n");
-
 	EPD_W21_Write(Gatetime, sizeof(Gatetime));		// Gage time setting
-	//EPD_W21_Write(BorderWavefrom, sizeof(BorderWavefrom));	// Border setting
-
-//	EPD_W21_WriteCMD_p1(0x0f,0x00);		// gate scan start
-
-	EPD_W21_Write(RamDataEntryMode, sizeof(RamDataEntryMode));	// X decrease, Y decrease
-	//DebugInfo("###4\n");
-
-//	EPD_W21_SetRamArea(0x00, 0x11,0xab, 0x00);	// X-source area,Y-gage area
-//	EPD_W21_SetRamArea(0x00,0x0f,0x27,0x01,0x00,0x00);	// X-source area,Y-gage area
-	EPD_W21_SetRamArea(0x00,0x18,0xC7,0x00,0x00,0x00);	// X-source area,Y-gage area
-	//DebugInfo("###5\n");
-
-//	EPD_W21_SetRamPointer(0x00,0xab);		// set ram
-    EPD_W21_SetRamPointer(0x00,0xC7,0x00);	// set ram
-	//DebugInfo("###6\n");
-
+	EPD_W21_Write(RamDataEntryMode, sizeof(RamDataEntryMode));	// X increase, Y increase
+	EPD_W21_SetRamArea(0x00,0x18,0x00,0x00,0xc7,0x00);	// X-source area,Y-gage area
+    EPD_W21_SetRamPointer(0x00,0x00,0x00);	// set ram
 }
 
 void EPD_W21_Init(void)
@@ -142,15 +106,7 @@ void EPD_W21_Init(void)
 	EPD_W21_RST_1;
 	driver_delay_xms(10000);
 
-//	EPD_W21_DispInit();		// pannel configure
-
-//	EPD_W21_WirteLUT(LUTDefault);	// update wavefrom
-
-
 	EPD_W21_DispInit();		// pannel configure
-
-
-
 }
 
 
