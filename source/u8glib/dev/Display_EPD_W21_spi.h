@@ -3,7 +3,7 @@
 
 #include "fsl_gpio.h"
 
-#define EPD_W21_SPI_SPEED 0x02
+#define EPD_W21_SPI_SPEED 0x01
 
 //#define EPD_W21_VPP_0	P4 &= ~0x80
 //#define EPD_W21_VPP_1	P4 |= 0x80
