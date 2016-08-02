@@ -7,9 +7,8 @@
 #include "Display_EPD_W21.h"
 #include "Display_EPD_W21_spi.h"
 #include "../u8g.h"
-#include "Ap_29demo.h"
-#include "../../okio_bubble.h"
-
+#include "okio_logo_no_mouth.h"
+#include "okio_logo_only_mouth.h"
 
 /*
  * The GDEP015OC1 accepts 1-byte worth of pixels at a time, corresponding to 8
@@ -72,13 +71,28 @@ void driver_delay_xms(unsigned long xms)
     }
 }
 
+static uint8_t expand_nibble(uint8_t byte, bool upper_nibble)
+{
+    uint8_t nib;
+    uint8_t extended;
+    if (upper_nibble)
+        nib = (0xf0 & byte) >> 4;
+    else
+        nib = 0xf & byte;
+    extended = (nib & 0x1)        | ((nib & 0x1) << 1) |
+               ((nib & 0x2) << 1) | ((nib & 0x2) << 2) |
+               ((nib & 0x4) << 2) | ((nib & 0x4) << 3) |
+               ((nib & 0x8) << 3) | ((nib & 0x8) << 4);
+    return extended;
+}
+
 static void Ultrachip(void)
 {
 	unsigned int i;
-	for(i=0;i<10000;i++)
+	for(i=0;i<5000;i++)
 	{
-		EPD_W21_WriteDATA(G_Ultrachip[i]);
-		//EPD_W21_WriteDATA(0xff);
+		EPD_W21_WriteDATA(expand_nibble(okio_logo_no_mouth[i], true));
+		EPD_W21_WriteDATA(expand_nibble(okio_logo_no_mouth[i], false));
 	}
 	driver_delay_xms(2);
 }
@@ -88,7 +102,7 @@ static void Ultrachip_red(void)
     unsigned int i;
     for(i=0;i<5000;i++)
 	{
-		EPD_W21_WriteDATA(~G_Ultrachip_red[i]);
+		EPD_W21_WriteDATA(okio_logo_only_mouth[i]);
 	}
 	driver_delay_xms(2);
 }
@@ -241,7 +255,7 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             EPD_W21_WriteCMD(0X00);
             EPD_W21_WriteDATA(0xcf);                //Ñ¡Ôñ×î´ó·Ö±æÂÊ
             EPD_W21_WriteCMD(0X50);
-            EPD_W21_WriteDATA(0x37);
+            EPD_W21_WriteDATA(0x27);
             EPD_W21_WriteCMD(0x30);                 //PLLÉè¶¨
             EPD_W21_WriteDATA(0x39);
             EPD_W21_WriteCMD(0x61);                 //ÏñËØÉè¶¨
