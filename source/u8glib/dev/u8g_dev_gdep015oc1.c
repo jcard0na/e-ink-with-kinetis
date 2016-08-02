@@ -7,6 +7,8 @@
 #include "Display_EPD_W21.h"
 #include "Display_EPD_W21_spi.h"
 #include "../u8g.h"
+#include "Ap_29demo.h"
+#include "../../okio_bubble.h"
 
 
 /*
@@ -29,21 +31,15 @@
 #define GDEP015OC1_COLUMNS 200
 #define GDEP015OC1_BYTES_PER_LINE ((GDEP015OC1_COLUMNS + 7) / 8)    /* i.e. 25 */
 
-const unsigned char LUTDefault_part[31] = {
-        0x32,   // command
-    // this is undocumented voodoo from the vendor for partial screen update mode
-    0x10, 0x18, 0x18, 0x08, 0x18, 0x18, 0x08, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x13, 0x14, 0x44, 0x12, 0x00, 0x00 ,0x00, 0x00, 0x00, 0x00
-};
-
-const unsigned char LUTDefault_full[31] = {
-        0x32,   // command
-    // this is undocumented voodoo from the vendor for full screen update mode
-    0x02, 0x02, 0x01, 0x11, 0x12, 0x12, 0x22, 0x22, 0x66, 0x69,
-    0x69, 0x59, 0x58, 0x99, 0x99, 0x88, 0x00, 0x00, 0x00, 0x00,
-    0xF8, 0xB4, 0x13, 0x51, 0x35, 0x51, 0x51, 0x19, 0x01, 0x00
-};
+// this is undocumented voodoo from the vendor for full screen update mode
+const unsigned char lut_vcom0[] ={	0x0E	,0x14	,0x01	,0x0A	,0x06	,0x04	,0x0A	,0x0A	,0x0F	,0x03	,0x03	,0x0C	,0x06	,0x0A	,0x00	};
+const unsigned char lut_w[] ={	0x0E	,0x14	,0x01	,0x0A	,0x46	,0x04	,0x8A	,0x4A	,0x0F	,0x83	,0x43	,0x0C	,0x86	,0x0A	,0x04	};
+const unsigned char lut_b[] ={	0x0E	,0x14	,0x01	,0x8A	,0x06	,0x04	,0x8A	,0x4A	,0x0F	,0x83	,0x43	,0x0C	,0x06	,0x4A	,0x04	};
+const unsigned char lut_g1[] ={	0x8E	,0x94	,0x01	,0x8A	,0x06	,0x04	,0x8A	,0x4A	,0x0F	,0x83	,0x43	,0x0C	,0x06	,0x0A	,0x04	};
+const unsigned char lut_g2[] ={	0x8E	,0x94	,0x01	,0x8A	,0x06	,0x04	,0x8A	,0x4A	,0x0F	,0x83	,0x43	,0x0C	,0x06	,0x0A	,0x04	};
+const unsigned char lut_vcom1[] ={	0x03	,0x1D	,0x01	,0x01	,0x08	,0x23	,0x37	,0x37	,0x01	,0x00	,0x00	,0x00	,0x00	,0x00	,0x00	};
+const unsigned char lut_red0[] ={	0x83	,0x5D	,0x01	,0x81	,0x48	,0x23	,0x77	,0x77	,0x01	,0x00	,0x00	,0x00	,0x00	,0x00	,0x00	};
+const unsigned char lut_red1[] ={	0x03	,0x1D	,0x01	,0x01	,0x08	,0x23	,0x37	,0x37	,0x01	,0x00	,0x00	,0x00	,0x00	,0x00	,0x00	};
 
 
 
@@ -75,6 +71,77 @@ void driver_delay_xms(unsigned long xms)
         for(i=0; i<256; i++);
     }
 }
+
+static void Ultrachip(void)
+{
+	unsigned int i;
+	for(i=0;i<10000;i++)
+	{
+		EPD_W21_WriteDATA(G_Ultrachip[i]);
+		//EPD_W21_WriteDATA(0xff);
+	}
+	driver_delay_xms(2);
+}
+
+static void Ultrachip_red(void)
+{
+    unsigned int i;
+    for(i=0;i<5000;i++)
+	{
+		EPD_W21_WriteDATA(~G_Ultrachip_red[i]);
+	}
+	driver_delay_xms(2);
+}
+
+static void pic_display(void)
+{
+	EPD_W21_WriteCMD(0x10);			//¿ªÊ¼´«ÊäºÚ°×Í¼Ïñ
+	Ultrachip();
+	EPD_W21_WriteCMD(0x13);			//¿ªÊ¼´«ÊäºìÍ¼Ïñ
+	Ultrachip_red();
+}
+
+
+static void lut_bw(void)
+{
+	unsigned int count;
+	EPD_W21_WriteCMD(0x20);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_vcom0[count]);}
+
+	EPD_W21_WriteCMD(0x21);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_w[count]);}
+
+	EPD_W21_WriteCMD(0x22);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_b[count]);}
+
+	EPD_W21_WriteCMD(0x23);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_g1[count]);}
+
+	EPD_W21_WriteCMD(0x24);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_g2[count]);}
+}
+
+static void lut_red(void)
+{
+	unsigned int count;
+	EPD_W21_WriteCMD(0x25);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_vcom1[count]);}
+
+	EPD_W21_WriteCMD(0x26);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_red0[count]); }
+
+	EPD_W21_WriteCMD(0x27);
+	for(count=0;count<15;count++)
+		{EPD_W21_WriteDATA(lut_red1[count]); }
+}
+
 
 static int update_lines (int start_line, int num_lines, const uint8_t * line_data)
 {
@@ -136,6 +203,16 @@ static uint8_t u8g_com_fn (u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_p
     return rc;
 }
 
+static void lcd_chkstatus(void)
+{
+    while(1)
+    {
+        if(isEPD_W21_BUSY==0) break;
+    }
+    driver_delay_xms(2000);
+}
+
+
 static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg)
 {
     int rc = 0;
@@ -148,24 +225,49 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             break;
         case U8G_DEV_MSG_INIT: {
             EPD_W21_Init();            // display
-            EPD_W21_WirteLUT((unsigned char *)LUTDefault_full);
-            EPD_W21_POWERON();
 
-            EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
-            EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0x00);
-            EPD_W21_Update();
-            driver_delay_xms(100000);
-
-            EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
-            EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0xff);
-            EPD_W21_Update();
-            driver_delay_xms(100000);
-
-#if (ROWS_PER_PAGE != GDEP015OC1_ROWS)
-            /* Switch to partial update mode */
-            EPD_W21_WirteLUT((unsigned char *)LUTDefault_part);
-            EPD_W21_POWERON();
-#endif
+            EPD_W21_WriteCMD(0x01);
+            EPD_W21_WriteDATA(0x07);            //ÉèÖÃ¸ßµÍµçÑ¹
+            EPD_W21_WriteDATA(0x00);
+            EPD_W21_WriteDATA(0x08);
+            EPD_W21_WriteDATA(0x00);
+            EPD_W21_WriteCMD(0x06);         //boostÉè¶¨
+            EPD_W21_WriteDATA(0x07);
+            EPD_W21_WriteDATA(0x07);
+            EPD_W21_WriteDATA(0x07);
+            EPD_W21_WriteCMD(0x04);         //ÉÏµç
+            lcd_chkstatus();                //²é¿´Ð¾Æ¬×´Ì¬
+            driver_delay_xms(300000);
+            EPD_W21_WriteCMD(0X00);
+            EPD_W21_WriteDATA(0xcf);                //Ñ¡Ôñ×î´ó·Ö±æÂÊ
+            EPD_W21_WriteCMD(0X50);
+            EPD_W21_WriteDATA(0x37);
+            EPD_W21_WriteCMD(0x30);                 //PLLÉè¶¨
+            EPD_W21_WriteDATA(0x39);
+            EPD_W21_WriteCMD(0x61);                 //ÏñËØÉè¶¨
+            EPD_W21_WriteDATA(0xC8);                //200ÏñËØ
+            EPD_W21_WriteDATA(0x00);                //200ÏñËØ
+            EPD_W21_WriteDATA(0xC8);
+            EPD_W21_WriteCMD(0x82);                 //vcomÉè¶¨
+            EPD_W21_WriteDATA(0x0E);
+            lut_bw();
+            lut_red();
+            pic_display();
+            EPD_W21_WriteCMD(0x12);
+            lcd_chkstatus();
+            driver_delay_xms(300000);         //wait for fresh display
+            EPD_W21_WriteCMD(0X50);
+            EPD_W21_WriteDATA(0x17);                //BD floating
+            EPD_W21_WriteCMD(0x82);                 //to solve Vcom drop
+            EPD_W21_WriteDATA(0x00);
+            EPD_W21_WriteCMD(0x01);                 //power setting
+            EPD_W21_WriteDATA(0x02);                //gate switch to external
+            EPD_W21_WriteDATA(0x00);
+            EPD_W21_WriteDATA(0x00);
+            EPD_W21_WriteDATA(0x00);
+            driver_delay_xms(1500);                 //delay 1.5S
+            EPD_W21_WriteCMD(0X02);                 //power off
+            driver_delay_xms(40000);
 
             memset(cgram_, 0, sizeof(cgram_));
             break;
