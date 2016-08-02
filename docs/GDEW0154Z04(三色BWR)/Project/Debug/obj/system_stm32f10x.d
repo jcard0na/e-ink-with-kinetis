@@ -1,0 +1,15 @@
+.\Debug\obj\system_stm32f10x.o: ..\StartUp\system_stm32f10x.c
+.\Debug\obj\system_stm32f10x.o: ..\StartUp\stm32f10x.h
+.\Debug\obj\system_stm32f10x.o: ..\StartUp\core_cm3.h
+.\Debug\obj\system_stm32f10x.o: e:\Keil\ARM\RV31\INC\stdint.h
+.\Debug\obj\system_stm32f10x.o: ..\StartUp\system_stm32f10x.h
+.\Debug\obj\system_stm32f10x.o: ..\StartUp\stm32f10x_conf.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_flash.h
+.\Debug\obj\system_stm32f10x.o: ..\StartUp\stm32f10x.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_gpio.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_iwdg.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_rcc.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_spi.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_tim.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\stm32f10x_usart.h
+.\Debug\obj\system_stm32f10x.o: ..\FWLib\misc.h
