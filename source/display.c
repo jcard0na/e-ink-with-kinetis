@@ -15,7 +15,7 @@
 #define HEIGHT (200)
 #define WIDTH (200)
 
-extern u8g_dev_t xGDEP015OC1u8gDevice;
+extern u8g_dev_t xGDEW0154T1u8gDevice;
 
 struct _cp {
     int x;
@@ -103,7 +103,7 @@ void display_main(int num_messages)
 
 void display_init()
 {
-    u8g_Init(&u8g, &xGDEP015OC1u8gDevice);
+    u8g_Init(&u8g, &xGDEW0154T1u8gDevice);
 }
 
 void display_off()

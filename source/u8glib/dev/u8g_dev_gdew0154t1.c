@@ -105,6 +105,16 @@ static void draw_pic_data_red(const uint8_t *data)
 	driver_delay_xms(2);
 }
 
+static void set_pic_data_red(uint8_t byte)
+{
+    unsigned int i;
+    for(i=0;i<5000;i++)
+	{
+		EPD_W21_WriteDATA(byte);
+	}
+	driver_delay_xms(2);
+}
+
 static void pic_display(void)
 {
 	EPD_W21_WriteCMD(0x10);			//¿ªÊ¼´«ÊäºÚ°×Í¼Ïñ
@@ -197,9 +207,9 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
     pic_display();
 	EPD_W21_WriteCMD(0x10);
 	draw_pic_data_bw(cgram_);
-    // Don't know how to extract red from u8glib yet...
-	//EPD_W21_WriteCMD(0x13);
-	//draw_pic_data_red(okio_logo_only_mouth);
+	EPD_W21_WriteCMD(0x13);
+    // Don't know how to extract red from u8glib, for now just clear it.
+	set_pic_data_red(0x00);
     EPD_W21_WriteCMD(0x12);
     lcd_chkstatus();
     driver_delay_xms(300000);         //wait for fresh display
