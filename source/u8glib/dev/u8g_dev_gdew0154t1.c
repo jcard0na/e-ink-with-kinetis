@@ -204,7 +204,6 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
     EPD_W21_WriteDATA(0x0E);
     lut_bw();
     lut_red();
-    pic_display();
 	EPD_W21_WriteCMD(0x10);
 	draw_pic_data_bw(cgram_);
 	EPD_W21_WriteCMD(0x13);
@@ -329,17 +328,7 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             break;
         }
     }
-#if (ROWS_PER_PAGE == 8)
-    return u8g_dev_pb8h1_base_fn(u8g, dev, msg, arg);
-#elif ROWS_PER_PAGE == 32
-    return u8g_dev_pb32h1_base_fn(u8g, dev, msg, arg);
-#elif ROWS_PER_PAGE == 64
     return u8g_dev_pb200h1_base_fn(u8g, dev, msg, arg);
-#elif ROWS_PER_PAGE == 200
-    return u8g_dev_pb200h1_base_fn(u8g, dev, msg, arg);
-#else
-    #error "Unsupported ROWS_PER_PAGE"
-#endif
 }
 
 u8g_dev_t xGDEW0154T1u8gDevice = { u8g_dev_fn, &pb, u8g_com_fn };
