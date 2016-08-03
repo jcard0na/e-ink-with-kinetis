@@ -9,6 +9,7 @@
 #include "../u8g.h"
 #include "okio_logo_no_mouth.h"
 #include "okio_logo_only_mouth.h"
+#include "qrcode.h"
 
 /*
  * The GDEP015OC1 accepts 1-byte worth of pixels at a time, corresponding to 8
@@ -91,8 +92,8 @@ static void Ultrachip(void)
 	unsigned int i;
 	for(i=0;i<5000;i++)
 	{
-		EPD_W21_WriteDATA(expand_nibble(okio_logo_no_mouth[i], true));
-		EPD_W21_WriteDATA(expand_nibble(okio_logo_no_mouth[i], false));
+		EPD_W21_WriteDATA(expand_nibble(qrcode[i], true));
+		EPD_W21_WriteDATA(expand_nibble(qrcode[i], false));
 	}
 	driver_delay_xms(2);
 }
@@ -102,7 +103,7 @@ static void Ultrachip_red(void)
     unsigned int i;
     for(i=0;i<5000;i++)
 	{
-		EPD_W21_WriteDATA(okio_logo_only_mouth[i]);
+		EPD_W21_WriteDATA(0x00);
 	}
 	driver_delay_xms(2);
 }
