@@ -20,10 +20,8 @@ int main(void) {
     BOARD_InitDebugConsole();
 
     display_init();
-    display_main(0);
-    display_main(3);
+    display_qrcode();
     display_main(5);
-    display_main(12);
 
     for(;;) { /* Infinite loop to avoid leaving the main function */
         __asm("NOP"); /* something to use as a breakpoint stop while looping */

@@ -10,6 +10,7 @@
 #include "stdio.h"
 #include "display.h"
 #include "okio_bubble.h"
+#include "qrcode.h"
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define HEIGHT (200)
@@ -98,6 +99,15 @@ void display_main(int num_messages)
         /*u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2, "OKIO");*/
 
         /*draw_hands(hour % 12, minute, second);*/
+    } while (u8g_NextPage(&u8g));
+}
+
+void display_qrcode()
+{
+    u8g_FirstPage(&u8g);
+
+    do {
+        u8g_DrawBitmap(&u8g, 0, 0, WIDTH/8, HEIGHT, qrcode);
     } while (u8g_NextPage(&u8g));
 }
 
