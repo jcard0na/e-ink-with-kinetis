@@ -22,7 +22,6 @@ int main(void) {
     display_init();
     display_main(0);
     display_main(3);
-    display_main(5);
     display_main(12);
 
     for(;;) { /* Infinite loop to avoid leaving the main function */
