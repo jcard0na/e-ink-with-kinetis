@@ -1,6 +1,6 @@
 RM := rm -rf
 CC := arm-none-eabi-g++
-BUILD_DIR = build
+BUILD_BASE_DIR = build
 
 vpath %.c drivers board startup utilities source
 
@@ -40,9 +40,11 @@ e-ink-with-kinetis.siz \
 ELF_SRCS += \
 ../e-ink-with-kinetis-test.elf 
 
-C_SRCS := $(shell find drivers/ utilities/ board/ -name '*.c')
-OBJS := $(addprefix build/, $(C_SRCS:%.c=%.o))
-C_DEPS := $(addprefix build/, $(C_SRCS:%.c=%.d))
+MODULES   := drivers utilities board
+BUILD_DIR := $(addprefix $(BUILD_BASE_DIR)/,$(MODULES))
+C_SRCS    := $(foreach sdir,$(MODULES),$(wildcard $(sdir)/*.c))
+OBJS      := $(addprefix $(BUILD_BASE_DIR)/, $(C_SRCS:%.c=%.o))
+C_DEPS    := $(addprefix $(BUILD_BASE_DIR)/, $(C_SRCS:%.c=%.d))
 
 C_SRCS += \
 source/display.c \
@@ -211,7 +213,7 @@ e-ink-with-kinetis.siz: e-ink-with-kinetis.elf
 	@echo ' '
 
 clean:
-	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) $(BUILD_DIR)  e-ink-with-kinetis.elf
+	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) $(BUILD_BASE_DIR)  e-ink-with-kinetis.elf
 	-@echo ' '
 
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
