@@ -9,7 +9,6 @@
 #include "string.h"
 #include "stdio.h"
 #include "display.h"
-#include "okio_bubble.h"
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define HEIGHT (200)
@@ -44,60 +43,43 @@ static const struct coord {
     { 63, 35 },
 };
 
-
-static void draw_watch(void * notyet)
-{
-    unsigned int i, h, w;
-    char s[3];
-
-    u8g_SetFont(&u8g, u8g_font_freedoomr10r);
-    u8g_SetFontPosCenter(&u8g);
-
-    for (i = 0; i < ARRAY_SIZE(nhour); i++) {
-        h = (i == 0) ? 12 : i;
-        sprintf(s, "%d", h);
-        w = u8g_GetStrWidth(&u8g, s);
-        u8g_DrawStr(&u8g, nhour[i].x - w/2, nhour[i].y, s);
-    }
-}
-
-static void draw_msgdots(int num)
-{
-    unsigned int i;
-    const int disc_radius = 10;
-
-    u8g_SetFont(&u8g, u8g_font_freedoomr10r);
-    u8g_SetFontPosCenter(&u8g);
-
-    for (i = 0; i < (num % (ARRAY_SIZE(nhour) + 1)); i++) {
-        u8g_DrawDisc(&u8g, nhour[i].x, nhour[i].y, disc_radius, U8G_DRAW_ALL);
-    }
-}
-
 void display_main(int num_messages)
 {
+    int w, il;
+    char *l;
     u8g_FirstPage(&u8g);
 
     do {
         u8g_SetColorIndex(&u8g, 1);
         u8g_DrawBox(&u8g, 0, 0, WIDTH, HEIGHT);
         u8g_SetColorIndex(&u8g, 0);
-        u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 8, U8G_DRAW_ALL);
-        u8g_SetColorIndex(&u8g, 1);
-        draw_msgdots(num_messages);
-        u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 40, U8G_DRAW_ALL);
-        u8g_SetColorIndex(&u8g, 0);
-        u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 45, U8G_DRAW_ALL);
-        draw_watch(NULL);
-        u8g_SetColorIndex(&u8g, 1);
+        u8g_SetFont(&u8g, u8g_font_profont22r);
+        u8g_SetFontPosCenter(&u8g);
+        l = "This is";
+        il = 20;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+        l = "your brain";
+        il += 20;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+        l = "on e-ink.";
+        il += 20;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+        l = "This is";
+        il += 40;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+        l = "your brain";
+        il += 20;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+        l = "on Kinetis.";
+        il += 20;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
 
-        u8g_DrawBitmap(&u8g, WIDTH/2 - 64/2, HEIGHT/2 - 64/2, 64/8, 64, okio_bubble_64);
-        /*u8g_SetFont(&u8g, u8g_font_profont22r);*/
-        /*u8g_SetFontPosCenter(&u8g);*/
-        /*w = u8g_GetStrWidth(&u8g, "OKIO");*/
-        /*u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2, "OKIO");*/
-
-        /*draw_hands(hour % 12, minute, second);*/
     } while (u8g_NextPage(&u8g));
 }
 
