@@ -9,7 +9,6 @@
 #include "string.h"
 #include "stdio.h"
 #include "display.h"
-#include "okio_bubble.h"
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define HEIGHT (200)
@@ -90,12 +89,6 @@ void display_main(int num_messages)
         u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, HEIGHT/2 - 45, U8G_DRAW_ALL);
         draw_watch(NULL);
         u8g_SetColorIndex(&u8g, 1);
-
-        u8g_DrawBitmap(&u8g, WIDTH/2 - 64/2, HEIGHT/2 - 64/2, 64/8, 64, okio_bubble_64);
-        /*u8g_SetFont(&u8g, u8g_font_profont22r);*/
-        /*u8g_SetFontPosCenter(&u8g);*/
-        /*w = u8g_GetStrWidth(&u8g, "OKIO");*/
-        /*u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2, "OKIO");*/
 
         /*draw_hands(hour % 12, minute, second);*/
     } while (u8g_NextPage(&u8g));
