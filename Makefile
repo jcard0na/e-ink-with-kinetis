@@ -84,6 +84,11 @@ e-ink-with-kinetis.siz: e-ink-with-kinetis.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
+flash: e-ink-with-kinetis.elf
+	@echo 'Flashing microcontroller via gdb over openocd'
+	arm-none-eabi-gdb --batch --ex 'target remote localhost:3333' -ex 'load $<'
+	@echo 'You can now reset your board to run the new image'
+
 clean:
 	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) $(BUILD_BASE_DIR)  e-ink-with-kinetis.elf
 	-@echo ' '
