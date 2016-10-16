@@ -1,5 +1,4 @@
 RM := rm -rf
-CC := arm-none-eabi-g++
 BUILD_BASE_DIR = build
 
 vpath %.c drivers board startup utilities source 
@@ -68,7 +67,7 @@ build/startup/%.o: startup/%.S
 e-ink-with-kinetis.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -T "MKL43Z256xxx4_flash.ld" -Xlinker --gc-sections -Wl,-Map,"e-ink-with-kinetis.map" -specs=nosys.specs -specs=nano.specs -Xlinker -z -Xlinker muldefs -o "e-ink-with-kinetis.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -T "MKL43Z256xxx4_flash.ld" -Xlinker --gc-sections -Wl,-no-wchar-size-warning,-Map,"e-ink-with-kinetis.map" -specs=nosys.specs -specs=nano.specs -Xlinker -z -Xlinker muldefs -o "e-ink-with-kinetis.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -100,7 +99,7 @@ secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
 
 define make-goal
 $1/%.o: %.c
-	@echo '(make goal) Building file: $<'
+	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
 	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -D"CPU_MKL43Z256VMP4" -Istartup -Iboard -Iutilities -ICMSIS -Idrivers -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$$@" "$$<"
 	@echo 'Finished building: $<'
