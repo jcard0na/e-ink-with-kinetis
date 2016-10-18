@@ -151,15 +151,15 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             EPD_W21_WirteLUT((unsigned char *)LUTDefault_full);
             EPD_W21_POWERON();
 
-            EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
-            EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0x00);
-            EPD_W21_Update();
-            driver_delay_xms(100000);
+            /*EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram*/
+            /*EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0x00);*/
+            /*EPD_W21_Update();*/
+            /*driver_delay_xms(100000);*/
 
             EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
             EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0xff);
             EPD_W21_Update();
-            driver_delay_xms(100000);
+            driver_delay_xms(10000);
 
 #if (ROWS_PER_PAGE != GDEP015OC1_ROWS)
             /* Switch to partial update mode */
