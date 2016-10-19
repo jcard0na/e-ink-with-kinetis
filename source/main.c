@@ -10,19 +10,45 @@
 #include "clock_config.h"
 #include "display.h"
 
+static void wait()
+{
+    long int cycles = 10000000;
+    while (cycles--)
+    {
+        __NOP();
+    }
+}
+
+void (*fn[])() = {
+                   display_circles1,
+                   display_circles2,
+                   display_ellipses1,
+                   display_frames1,
+                   display_frames2,
+                   display_frames3,
+                   display_main,
+                   NULL
+};
+
+
+
 /*!
  * @brief Application entry point.
  */
-int main(void) {
+int main(void)
+{
+    int i = 0;
+
     /* Init board hardware. */
     BOARD_InitPins();
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
 
     display_init();
-    display_main(0);
-    display_main(3);
-    display_main(12);
+    while (fn[i] != NULL) {
+        fn[i++]();
+        wait();
+    }
 
     for(;;) { /* Infinite loop to avoid leaving the main function */
         __asm("NOP"); /* something to use as a breakpoint stop while looping */

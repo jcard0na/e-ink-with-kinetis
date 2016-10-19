@@ -2,8 +2,12 @@
 #define DISPLAY_H
 
 void display_init();
-void display_main(int num_messages);
-void display_on();
-void display_update();
+void display_main();
+void display_circles1();
+void display_circles2();
+void display_ellipses1();
+void display_frames1();
+void display_frames2();
+void display_frames3();
 
 #endif /* DISPLAY_H */
