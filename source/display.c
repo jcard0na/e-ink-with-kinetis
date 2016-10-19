@@ -54,7 +54,7 @@ void display_main()
 
         il += 55;
         u8g_DrawRBox(&u8g, 35, il - 15, 130, 30, 5);
-        l = "Well Done"
+        l = "Well Done";
         w = u8g_GetStrWidth(&u8g, l);
         u8g_SetColorIndex(&u8g, 1);
         u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
