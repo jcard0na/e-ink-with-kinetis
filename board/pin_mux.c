@@ -24,26 +24,18 @@ gpio_pin_config_t pin_as_input = { kGPIO_DigitalInput, 0 };
 /* Function Name : BOARD_InitPins */
 void BOARD_InitPins(void)
 {
-    /* Initialize LPUART0 pins below */
-    /* Ungate the port clock */
     CLOCK_EnableClock(kCLOCK_PortA);
-    /* Affects PORTA_PCR1 register */
-    PORT_SetPinMux(PORTA, 1u, kPORT_MuxAlt2);
-    /* Affects PORTA_PCR2 register */
-    PORT_SetPinMux(PORTA, 2u, kPORT_MuxAlt2);
+    CLOCK_EnableClock(kCLOCK_PortE);
+
     /* e-ink reset output, active low */
-    PORT_SetPinMux(PORTA, 13u, kPORT_MuxAsGpio);
-
-    /* Initialize pins used for e-ink below */
-    /* Ungate the port clock */
-    CLOCK_EnableClock(kCLOCK_PortD);
-
-    /* e-ink use a high-strength gpio on the same header for power*/
-    PORT_SetPinConfig(PORTD, 7u, &port_pin_output_high_drive);
-    GPIO_PinInit(GPIOD, 7u, &pin_as_output_high);
-
-    /* e-ink D/C output */
-    PORT_SetPinMux(PORTD, 2u, kPORT_MuxAsGpio);
+    PORT_SetPinMux(PORTE, 0u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOE, 0u, &pin_as_output_high);
+    /* D/~C */
+    PORT_SetPinMux(PORTE, 1u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOE, 1u, &pin_as_output_high);
+    /* BUSY */
+    PORT_SetPinMux(PORTE, 18u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOE, 18u, &pin_as_input);
 
 /* The example code provided by the vendor has a software spi implementation.
    Let's try that first.  Down the road, we'd probably want to switch to
@@ -52,31 +44,20 @@ void BOARD_InitPins(void)
 #define USE_BITBANG_SPI 1
 #if USE_BITBANG_SPI
     /* e-ink spi1_ss */
-    PORT_SetPinMux(PORTD, 4u, kPORT_MuxAsGpio);
+    PORT_SetPinMux(PORTE, 16u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOE, 16u, &pin_as_output_high);
     /* e-ink spi1_clk */
-    PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio);
+    PORT_SetPinMux(PORTA, 17u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOE, 17u, &pin_as_output_high);
     /* e-ink spi1_mosi */
-    PORT_SetPinMux(PORTD, 6u, kPORT_MuxAsGpio);
-
-    GPIO_PinInit(GPIOD, 4u, &pin_as_output_high);
-    GPIO_PinInit(GPIOD, 5u, &pin_as_output_high);
-    GPIO_PinInit(GPIOD, 6u, &pin_as_output_high);
+    PORT_SetPinMux(PORTE, 19u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOE, 19u, &pin_as_output_high);
 #else
     /* e-ink spi1_ss */
-    PORT_SetPinMux(PORTD, 4u, kPORT_MuxAlt2);
+    PORT_SetPinMux(PORTE, 16u, kPORT_MuxAlt2);
     /* e-ink spi1_clk */
-    PORT_SetPinMux(PORTD, 5u, kPORT_MuxAlt2);
-    /* e-ink spi1_mosi */
-    PORT_SetPinMux(PORTD, 6u, kPORT_MuxAlt2);
+    PORT_SetPinMux(PORTE, 17u, kPORT_MuxAlt2);
+    /* e-ink spi1_mosi, Alt 5 (not Alt 2) */
+    PORT_SetPinMux(PORTE, 19u, kPORT_MuxAlt5);
 #endif
-
-
-    /* Ungate the port clock */
-    CLOCK_EnableClock(kCLOCK_PortE);
-    /* e-ink busy input */
-    PORT_SetPinMux(PORTE, 0u, kPORT_MuxAsGpio);
-
-    GPIO_PinInit(GPIOA, 13u, &pin_as_output_high);
-    GPIO_PinInit(GPIOD, 2u, &pin_as_output_low);
-    GPIO_PinInit(GPIOE, 0u, &pin_as_input);
 }
