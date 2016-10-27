@@ -36,15 +36,16 @@
  *
  * The CPU macro should be declared in the project or makefile.
  */
-#if (defined(CPU_MKL43Z128VLH4) || defined(CPU_MKL43Z256VLH4) || defined(CPU_MKL43Z128VMP4) || \
-    defined(CPU_MKL43Z256VMP4))
+#if (defined(CPU_MKL17Z128VFM4) || defined(CPU_MKL17Z256VFM4) || defined(CPU_MKL17Z128VFT4) || \
+    defined(CPU_MKL17Z256VFT4) || defined(CPU_MKL17Z128VLH4) || defined(CPU_MKL17Z256VLH4) || \
+    defined(CPU_MKL17Z128VMP4) || defined(CPU_MKL17Z256VMP4))
 
-#define KL43Z4_SERIES
+#define KL17Z4_SERIES
 
 /* CMSIS-style register definitions */
-#include "MKL43Z4.h"
+#include "MKL17Z4.h"
 /* CPU specific feature definitions */
-#include "MKL43Z4_features.h"
+#include "MKL17Z4_features.h"
 
 #else
     #error "No valid CPU defined!"

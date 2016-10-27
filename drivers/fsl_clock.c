@@ -239,32 +239,6 @@ void CLOCK_SetSimConfig(sim_clock_config_t const *config)
     CLOCK_SetEr32kClock(config->er32kSrc);
 }
 
-bool CLOCK_EnableUsbfs0Clock(clock_usb_src_t src, uint32_t freq)
-{
-    bool ret = true;
-
-    CLOCK_DisableClock(kCLOCK_Usbfs0);
-
-    if (kCLOCK_UsbSrcExt == src)
-    {
-        SIM->SOPT2 &= ~SIM_SOPT2_USBSRC_MASK;
-    }
-    else
-    {
-        SIM->SOPT2 |= SIM_SOPT2_USBSRC_MASK;
-    }
-
-    CLOCK_EnableClock(kCLOCK_Usbfs0);
-
-    if (kCLOCK_UsbSrcIrc48M == src)
-    {
-        USB0->CLK_RECOVER_IRC_EN = 0x03U;
-        USB0->CLK_RECOVER_CTRL |= USB_CLK_RECOVER_CTRL_CLOCK_RECOVER_EN_MASK;
-    }
-
-    return ret;
-}
-
 uint32_t CLOCK_GetInternalRefClkFreq(void)
 {
     uint8_t divider1 = MCG_SC_FCRDIV_VAL;

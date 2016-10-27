@@ -10,13 +10,6 @@
  * Code
  ******************************************************************************/
 
-
-port_pin_config_t port_pin_output_high_drive= {
-   .pullSelect = kPORT_PullDisable,
-   .driveStrength = kPORT_HighDriveStrength,
-   .mux = kPORT_MuxAsGpio
-};
-
 gpio_pin_config_t pin_as_output_low = { kGPIO_DigitalOutput, 0 };
 gpio_pin_config_t pin_as_output_high = { kGPIO_DigitalOutput, 1 };
 gpio_pin_config_t pin_as_input = { kGPIO_DigitalInput, 0 };

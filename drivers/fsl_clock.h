@@ -36,7 +36,7 @@
 #include <stdbool.h>
 #include <assert.h>
 
-/*! @addtogroup mcglite */
+/*! @addtogroup clock */
 /*! @{ */
 
 /*******************************************************************************
@@ -95,12 +95,6 @@ extern uint32_t g_xtal32Freq;
 #define SPI_CLOCKS               \
     {                            \
         kCLOCK_Spi0, kCLOCK_Spi1 \
-    }
-
-/*! @brief Clock ip name array for SLCD. */
-#define SLCD_CLOCKS  \
-    {                \
-        kCLOCK_Slcd0 \
     }
 
 /*! @brief Clock ip name array for PIT. */
@@ -236,12 +230,6 @@ typedef enum _clock_name
 
 } clock_name_t;
 
-/*! @brief USB clock source definition. */
-typedef enum _clock_usb_src
-{
-    kCLOCK_UsbSrcIrc48M = SIM_SOPT2_USBSRC(1U), /*!< Use IRC48M.    */
-    kCLOCK_UsbSrcExt = SIM_SOPT2_USBSRC(0U)     /*!< Use USB_CLKIN. */
-} clock_usb_src_t;
 /*------------------------------------------------------------------------------
 
  clock_gate_t definition:
@@ -277,7 +265,6 @@ typedef enum _clock_ip_name
     kCLOCK_I2c0 = CLK_GATE_DEFINE(0x1034U, 6U),
     kCLOCK_I2c1 = CLK_GATE_DEFINE(0x1034U, 7U),
     kCLOCK_Uart2 = CLK_GATE_DEFINE(0x1034U, 12U),
-    kCLOCK_Usbfs0 = CLK_GATE_DEFINE(0x1034U, 18U),
     kCLOCK_Cmp0 = CLK_GATE_DEFINE(0x1034U, 19U),
     kCLOCK_Cmp1 = CLK_GATE_DEFINE(0x1034U, 19U),
     kCLOCK_Cmp2 = CLK_GATE_DEFINE(0x1034U, 19U),
@@ -291,7 +278,6 @@ typedef enum _clock_ip_name
     kCLOCK_PortC = CLK_GATE_DEFINE(0x1038U, 11U),
     kCLOCK_PortD = CLK_GATE_DEFINE(0x1038U, 12U),
     kCLOCK_PortE = CLK_GATE_DEFINE(0x1038U, 13U),
-    kCLOCK_Slcd0 = CLK_GATE_DEFINE(0x1038U, 19U),
     kCLOCK_Lpuart0 = CLK_GATE_DEFINE(0x1038U, 20U),
     kCLOCK_Lpuart1 = CLK_GATE_DEFINE(0x1038U, 21U),
     kCLOCK_Flexio0 = CLK_GATE_DEFINE(0x1038U, 31U),
@@ -522,24 +508,6 @@ static inline void CLOCK_SetFlexio0Clock(uint32_t src)
     SIM->SOPT2 = ((SIM->SOPT2 & ~SIM_SOPT2_FLEXIOSRC_MASK) | SIM_SOPT2_FLEXIOSRC(src));
 }
 
-/*! @brief Enable USB FS clock.
- *
- * @param src  USB FS clock source.
- * @param freq The frequency specified by src.
- * @retval true The clock is set successfully.
- * @retval false The clock source is invalid to get proper USB FS clock.
- */
-bool CLOCK_EnableUsbfs0Clock(clock_usb_src_t src, uint32_t freq);
-
-/*! @brief Disable USB FS clock.
- *
- * Disable USB FS clock.
- */
-static inline void CLOCK_DisableUsbfs0Clock(void)
-{
-    CLOCK_DisableClock(kCLOCK_Usbfs0);
-}
-
 /*!
  * @brief Set CLKOUT source.
  *
@@ -650,7 +618,7 @@ void CLOCK_SetSimConfig(sim_clock_config_t const *config);
  */
 static inline void CLOCK_SetSimSafeDivs(void)
 {
-    SIM->CLKDIV1 = 0x10030000U;
+    SIM->CLKDIV1 = 0x10070000U;
 }
 
 /*!

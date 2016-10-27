@@ -46,14 +46,14 @@ OBJS      := $(addprefix $(BUILD_BASE_DIR)/, $(C_SRCS:%.c=%.o))
 C_DEPS    := $(addprefix $(BUILD_BASE_DIR)/, $(C_SRCS:%.c=%.d))
 
 OBJS += \
-build/startup/startup_MKL43Z4.o \
-build/startup/system_MKL43Z4.o  \
+build/startup/startup_MKL17Z4.o \
+build/startup/system_MKL17Z4.o  \
 
 S_UPPER_SRCS += \
-build/startup/startup_MKL43Z4.S 
+build/startup/startup_MKL17Z4.S 
 
 S_UPPER_DEPS += \
-build/startup/startup_MKL43Z4.d 
+build/startup/startup_MKL17Z4.d 
 
 all: checkdirs e-ink-with-kinetis.elf secondary-outputs
 
@@ -67,7 +67,7 @@ build/startup/%.o: startup/%.S
 e-ink-with-kinetis.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -T "MKL43Z256xxx4_flash.ld" -Xlinker --gc-sections -Wl,-no-wchar-size-warning,-Map,"e-ink-with-kinetis.map" -specs=nosys.specs -specs=nano.specs -Xlinker -z -Xlinker muldefs -o "e-ink-with-kinetis.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -T "MKL17Z256xxx4_flash.ld" -Xlinker --gc-sections -Wl,-no-wchar-size-warning,-Map,"e-ink-with-kinetis.map" -specs=nosys.specs -specs=nano.specs -Xlinker -z -Xlinker muldefs -o "e-ink-with-kinetis.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -101,7 +101,7 @@ define make-goal
 $1/%.o: %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -D"CPU_MKL43Z256VMP4" -Istartup -Iboard -Iutilities -ICMSIS -Idrivers -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$$@" "$$<"
+	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -D"CPU_MKL17Z256VFM4" -Istartup -Iboard -Iutilities -ICMSIS -Idrivers -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$$@" "$$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 endef
