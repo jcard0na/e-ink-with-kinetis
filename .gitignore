@@ -5,3 +5,4 @@ build
 e-ink-with-kinetis.elf
 e-ink-with-kinetis.hex
 e-ink-with-kinetis.map
+/Debug/
