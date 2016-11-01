@@ -19,6 +19,8 @@ void BOARD_InitPins(void)
 {
     CLOCK_EnableClock(kCLOCK_PortA);
     CLOCK_EnableClock(kCLOCK_PortE);
+    CLOCK_EnableClock(kCLOCK_PortC);
+    CLOCK_EnableClock(kCLOCK_PortD);
 
     /* e-ink reset output, active low */
     PORT_SetPinMux(PORTE, 0u, kPORT_MuxAsGpio);
@@ -46,6 +48,7 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 19u, &pin_as_output_high);
 #else
+    #error Hardware assisted SPI not implemented yet
     /* e-ink spi1_ss */
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAlt2);
     /* e-ink spi1_clk */
@@ -53,4 +56,16 @@ void BOARD_InitPins(void)
     /* e-ink spi1_mosi, Alt 5 (not Alt 2) */
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAlt5);
 #endif
+
+    /* Pin header */
+    PORT_SetPinMux(PORTD, 7u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOD, 7u, &pin_as_output_high);
+    PORT_SetPinMux(PORTD, 6u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOD, 6u, &pin_as_output_low);
+    PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOD, 5u, &pin_as_output_high);
+    PORT_SetPinMux(PORTD, 4u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOD, 4u, &pin_as_output_low);
+    PORT_SetPinMux(PORTC, 7u, kPORT_MuxAsGpio);
+    GPIO_PinInit(GPIOC, 7u, &pin_as_output_high);
 }
