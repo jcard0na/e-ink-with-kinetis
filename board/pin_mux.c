@@ -42,7 +42,7 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 16u, &pin_as_output_high);
     /* e-ink spi1_clk */
-    PORT_SetPinMux(PORTA, 17u, kPORT_MuxAsGpio);
+    PORT_SetPinMux(PORTE, 17u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 17u, &pin_as_output_high);
     /* e-ink spi1_mosi */
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAsGpio);
