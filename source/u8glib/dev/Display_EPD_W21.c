@@ -102,9 +102,9 @@ void EPD_W21_Init(void)
 	EPD_W21_BS_0;		// 4 wire spi mode selected
 
 	EPD_W21_RST_0;		// Module reset
-	driver_delay_xms(10000);
+	//driver_delay_xms(100);
 	EPD_W21_RST_1;
-	driver_delay_xms(10000);
+	//driver_delay_xms(100);
 
 	EPD_W21_DispInit();		// pannel configure
 }

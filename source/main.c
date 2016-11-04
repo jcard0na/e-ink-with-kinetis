@@ -12,7 +12,7 @@
 
 static void wait()
 {
-    long int cycles = 10000000;
+    long int cycles = CLOCK_GetFreq(kCLOCK_CoreSysClk);
     while (cycles--)
     {
         __NOP();
@@ -41,13 +41,13 @@ int main(void)
 
     /* Init board hardware. */
     BOARD_InitPins();
-    BOARD_BootClockRUN();
+    BOARD_BootClockVLPR();
     BOARD_InitDebugConsole();
 
     display_init();
     while (fn[i] != NULL) {
         fn[i++]();
-        wait();
+        //wait();
     }
 
     for(;;) { /* Infinite loop to avoid leaving the main function */

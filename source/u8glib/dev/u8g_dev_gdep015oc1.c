@@ -91,7 +91,7 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
     part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
     EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
     EPD_W21_Update1();
-    driver_delay_xms(10000);
+    //driver_delay_xms(500);
     part_display(0x00, 0x18, line, 0x00, end_line, 0x00);    // set ram
     EPD_W21_WriteDispRam(GDEP015OC1_COLUMNS, ROWS_PER_PAGE, (uint8_t *) line_data);
 #else
@@ -100,7 +100,7 @@ static int update_lines (int start_line, int num_lines, const uint8_t * line_dat
     EPD_W21_Update();
 #endif
 
-    driver_delay_xms(1000);
+    //driver_delay_xms(50);
     return 0;
 }
 
@@ -159,7 +159,7 @@ static uint8_t u8g_dev_fn (u8g_t * u8g, u8g_dev_t * dev, uint8_t msg, void * arg
             EPD_W21_SetRamPointer(0x00, 0x00, 0x00);  // set ram
             EPD_W21_WriteDispRamMono(GDEP015OC1_COLUMNS, GDEP015OC1_ROWS, 0xff);
             EPD_W21_Update();
-            driver_delay_xms(10000);
+            //driver_delay_xms(500);
 
 #if (ROWS_PER_PAGE != GDEP015OC1_ROWS)
             /* Switch to partial update mode */

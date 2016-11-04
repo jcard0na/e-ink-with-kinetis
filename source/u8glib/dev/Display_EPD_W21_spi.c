@@ -12,50 +12,50 @@ void SPI_Delay(unsigned char xrate)
 }
 
 
-void SPI_Write(unsigned char value)                                    
-{                                                           
+void SPI_Write(unsigned char value)
+{
     unsigned char i;
 
-	
-	SPI_Delay(1);
-    for(i=0; i<8; i++)   
+
+	//SPI_Delay(1);
+    for(i=0; i<8; i++)
     {
         EPD_W21_CLK_0;
-		SPI_Delay(1);
+		//SPI_Delay(1);
         if(value & 0x80)
         	EPD_W21_MOSI_1;
         else
-        	EPD_W21_MOSI_0;		
-        value = (value << 1); 
-		SPI_Delay(1);
-		driver_delay_us(1);
-        EPD_W21_CLK_1; 
-        SPI_Delay(1);
+        	EPD_W21_MOSI_0;
+        value = (value << 1);
+		//SPI_Delay(1);
+		//driver_delay_us(1);
+        EPD_W21_CLK_1;
+        //SPI_Delay(1);
     }
 }
 
 void EPD_W21_WriteCMD(unsigned char command)
 {
-    SPI_Delay(1);
-    EPD_W21_CS_0;                   
+    //SPI_Delay(1);
+    EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 	SPI_Write(command);
 	EPD_W21_CS_1;
 }
 void EPD_W21_WriteDATA(unsigned char command)
 {
-    SPI_Delay(1);
-    EPD_W21_CS_0;                   
+    //SPI_Delay(1);
+    EPD_W21_CS_0;
 	EPD_W21_DC_1;		// command write
 	SPI_Write(command);
 	EPD_W21_CS_1;
 }
-	
+
 void EPD_W21_WriteCMD_p1(unsigned char command,unsigned char para)
 {
-	while(isEPD_W21_BUSY == 1);	// wait	
+	while(isEPD_W21_BUSY == 1);	// wait
 
-    EPD_W21_CS_0;                   
+    EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 	SPI_Write(command);
 	EPD_W21_DC_1;		// command write
@@ -65,32 +65,32 @@ void EPD_W21_WriteCMD_p1(unsigned char command,unsigned char para)
 
 void EPD_W21_WriteCMD_p2(unsigned char command,unsigned char para1,unsigned char para2)
 {
-	while(isEPD_W21_BUSY == 1);	// wait	
+	while(isEPD_W21_BUSY == 1);	// wait
 
-    EPD_W21_CS_0;                   
+    EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 	SPI_Write(command);
 	EPD_W21_DC_1;		// command write
 	SPI_Write(para1);
 	SPI_Write(para2);
 	EPD_W21_CS_1;
-} 
+}
 void EPD_W21_Write(unsigned char *value, unsigned char datalen)
 {
 	unsigned char i = 0;
 	unsigned char *ptemp;
-	
-	ptemp = value;
-	//DebugInfo("write data or command\n");	
 
-    EPD_W21_CS_0;                   	
+	ptemp = value;
+	//DebugInfo("write data or command\n");
+
+    EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
-	
+
 	SPI_Write(*ptemp);
 	ptemp++;
 
 	EPD_W21_DC_1;		// data write
-	
+
 	for(i= 0;i<datalen-1;i++)	// sub the command
 	{
 		SPI_Write(*ptemp);
@@ -111,12 +111,12 @@ void EPD_W21_WriteDispRam(unsigned char XSize,unsigned int YSize,
 	}
 	XSize = XSize/8;
 
-	while(isEPD_W21_BUSY == 1);	// wait	
-	
-    EPD_W21_CS_0;                   
+	while(isEPD_W21_BUSY == 1);	// wait
+
+    EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 	SPI_Write(0x24);
-	
+
 	EPD_W21_DC_1;		// data write
 	for(i=0;i<YSize;i++)
 	{
@@ -126,7 +126,7 @@ void EPD_W21_WriteDispRam(unsigned char XSize,unsigned int YSize,
 			Dispbuff++;
 		}
 	}
-	
+
 	EPD_W21_CS_1;
 }
 
@@ -140,12 +140,12 @@ void EPD_W21_WriteDispRamMono(unsigned char XSize,unsigned int YSize,
 		XSize = XSize+(8-XSize%8);
 	}
 	XSize = XSize/8;
-	while(isEPD_W21_BUSY == 1);	// wait	
+	while(isEPD_W21_BUSY == 1);	// wait
 
-    EPD_W21_CS_0;                   
+    EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 	SPI_Write(0x24);
-	
+
 	EPD_W21_DC_1;		// data write
 	for(i=0;i<YSize;i++)
 	{
@@ -154,7 +154,7 @@ void EPD_W21_WriteDispRamMono(unsigned char XSize,unsigned int YSize,
 		 SPI_Write(dispdata);
 		}
 	}
-	
+
 	EPD_W21_CS_1;
 }
 
