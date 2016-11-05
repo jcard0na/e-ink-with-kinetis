@@ -47,10 +47,10 @@ int main(void)
     display_init();
     while (fn[i] != NULL) {
         fn[i++]();
-        //wait();
     }
 
     for(;;) { /* Infinite loop to avoid leaving the main function */
+        wait();
         __asm("NOP"); /* something to use as a breakpoint stop while looping */
     }
 }

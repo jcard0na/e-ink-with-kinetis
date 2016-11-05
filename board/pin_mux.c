@@ -36,7 +36,7 @@ void BOARD_InitPins(void)
    Let's try that first.  Down the road, we'd probably want to switch to
    the hardware assisted API.  I'm choosing the same pins to make that easy.
  */
-#define USE_BITBANG_SPI 1
+#define USE_BITBANG_SPI 0
 #if USE_BITBANG_SPI
     /* e-ink spi1_ss */
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAsGpio);
@@ -48,7 +48,6 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 19u, &pin_as_output_high);
 #else
-    #error Hardware assisted SPI not implemented yet
     /* e-ink spi1_ss */
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAlt2);
     /* e-ink spi1_clk */
