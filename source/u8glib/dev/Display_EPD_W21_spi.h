@@ -2,6 +2,7 @@
 #define _MCU_SPI_H_
 
 #include "fsl_gpio.h"
+#include "fsl_spi.h"
 
 #define EPD_W21_SPI_SPEED 0x01
 

@@ -1,6 +1,5 @@
 
 #include "Display_EPD_W21_spi.h"
-#include "fsl_spi.h"
 
 void SPI_Delay(unsigned char xrate)
 {
@@ -36,7 +35,7 @@ void SPI_Write(unsigned char value)
         //SPI_Delay(1);
     }
 #else
-    SPI_WriteBlocking(SPI1, &value, 1);
+    SPI_WriteBlocking(SPI0, &value, 1);
 #endif
 }
 
@@ -135,7 +134,7 @@ void EPD_W21_WriteDispRam(unsigned char XSize,unsigned int YSize,
 	}
 #else
 	// todo fix polarity
-	SPI_WriteBlocking(SPI1, Dispbuff, XSize * YSize);
+	SPI_WriteBlocking(SPI0, Dispbuff, XSize * YSize);
 #endif
 
 	EPD_W21_CS_1;
@@ -168,7 +167,7 @@ void EPD_W21_WriteDispRamMono(unsigned char XSize,unsigned int YSize,
 	}
 #else
 	for(i=0;i<YSize * XSize;i++)
-		SPI_WriteBlocking(SPI1, &dispdata, 1);
+		SPI_WriteBlocking(SPI0, &dispdata, 1);
 #endif
 
 	EPD_W21_CS_1;

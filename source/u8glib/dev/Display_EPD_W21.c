@@ -99,9 +99,19 @@ void EPD_W21_DispInit(void)
 
 void EPD_W21_Init(void)
 {
+  	uint32_t sourceClock;
+	spi_master_config_t masterConfig = {0};
+
 	EPD_W21_BS_0;		// 4 wire spi mode selected
 
-	EPD_W21_RST_0;		// Module reset
+
+	// Configure SPI Hardware
+	SPI_MasterGetDefaultConfig(&masterConfig);
+	masterConfig.outputMode = kSPI_SlaveSelectAsGpio;
+	sourceClock = CLOCK_GetFreq(kCLOCK_BusClk);
+	SPI_MasterInit(SPI0, &masterConfig, sourceClock);
+	SPI_EnableFIFO(SPI0, false);
+
 	//driver_delay_xms(100);
 	EPD_W21_RST_1;
 	//driver_delay_xms(100);

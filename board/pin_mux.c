@@ -32,27 +32,21 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 18u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 18u, &pin_as_input);
 
-/* The example code provided by the vendor has a software spi implementation.
-   Let's try that first.  Down the road, we'd probably want to switch to
-   the hardware assisted API.  I'm choosing the same pins to make that easy.
- */
 #define USE_BITBANG_SPI 0
-#if USE_BITBANG_SPI
-    /* e-ink spi1_ss */
+    /* e-ink e-ink slave select */
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 16u, &pin_as_output_high);
-    /* e-ink spi1_clk */
+#if USE_BITBANG_SPI
+    /* e-ink sclk */
     PORT_SetPinMux(PORTE, 17u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 17u, &pin_as_output_high);
-    /* e-ink spi1_mosi */
+    /* e-ink mosi */
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 19u, &pin_as_output_high);
 #else
-    /* e-ink spi1_ss */
-    PORT_SetPinMux(PORTE, 16u, kPORT_MuxAlt2);
-    /* e-ink spi1_clk */
+    /* e-ink spi0_clk */
     PORT_SetPinMux(PORTE, 17u, kPORT_MuxAlt2);
-    /* e-ink spi1_mosi, Alt 5 (not Alt 2) */
+    /* e-ink spi0_mosi, Alt 5 (not Alt 2) */
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAlt5);
 #endif
 
