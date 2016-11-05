@@ -5,6 +5,7 @@
 #include "fsl_common.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+#include "board.h"
 
 /*******************************************************************************
  * Code
@@ -32,7 +33,6 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 18u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 18u, &pin_as_input);
 
-#define USE_BITBANG_SPI 0
     /* e-ink e-ink slave select */
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 16u, &pin_as_output_high);

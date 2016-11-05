@@ -14,7 +14,6 @@ void SPI_Delay(unsigned char xrate)
 
 void SPI_Write(unsigned char value)
 {
-#define USE_BITBANG_SPI 0
 #if USE_BITBANG_SPI
     unsigned char i;
 

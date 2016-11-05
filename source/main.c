@@ -41,7 +41,8 @@ int main(void)
 
     /* Init board hardware. */
     BOARD_InitPins();
-    BOARD_BootClockVLPR();
+//    BOARD_BootClockVLPR();
+    BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
 
     display_init();

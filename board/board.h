@@ -130,6 +130,8 @@
 #define TICKLESS_LPTMR_BASE_PTR LPTMR0  /*!< Tickless timer base address. */
 #define TICKLESS_LPTMR_IRQn LPTMR0_IRQn /*!< Tickless timer IRQ number. */
 
+#define USE_BITBANG_SPI 1
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */

@@ -97,20 +97,27 @@ void EPD_W21_DispInit(void)
     EPD_W21_SetRamPointer(0x00,0x00,0x00);	// set ram
 }
 
-void EPD_W21_Init(void)
+static void EPD_SPI_Init()
 {
+#if !USE_BITBANG_SPI
+#error
   	uint32_t sourceClock;
 	spi_master_config_t masterConfig = {0};
-
-	EPD_W21_BS_0;		// 4 wire spi mode selected
-
-
 	// Configure SPI Hardware
 	SPI_MasterGetDefaultConfig(&masterConfig);
 	masterConfig.outputMode = kSPI_SlaveSelectAsGpio;
 	sourceClock = CLOCK_GetFreq(kCLOCK_BusClk);
 	SPI_MasterInit(SPI0, &masterConfig, sourceClock);
 	SPI_EnableFIFO(SPI0, false);
+#endif
+}
+
+void EPD_W21_Init(void)
+{
+
+	EPD_W21_BS_0;		// 4 wire spi mode selected
+
+	EPD_SPI_Init();
 
 	//driver_delay_xms(100);
 	EPD_W21_RST_1;
