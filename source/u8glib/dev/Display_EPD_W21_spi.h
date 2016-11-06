@@ -19,8 +19,17 @@
 #define EPD_W21_CS_0	GPIO_WritePinOutput(GPIOE, 16u, 0)
 #define EPD_W21_CS_1	GPIO_WritePinOutput(GPIOE, 16u, 1)
 
-#define EPD_W21_DC_0	GPIO_WritePinOutput(GPIOE, 1u, 0)
-#define EPD_W21_DC_1	GPIO_WritePinOutput(GPIOE, 1u, 1)
+// JC: The SPI_Write() function will return before
+// the data is sent over the bus.  The delay prior
+// to changing the Data/Command signal
+// ensures that it does not change until the data has
+// been sent.
+// This is ugly and we probably want to investigate
+// using 9-bit SPI tranfers or find a way to know
+// that the data tranfer ended.
+//SPI_Delay(100);
+#define EPD_W21_DC_0	({SPI_Delay(0); GPIO_WritePinOutput(GPIOE, 1u, 0);})
+#define EPD_W21_DC_1	({SPI_Delay(0); GPIO_WritePinOutput(GPIOE, 1u, 1);})
 
 #define EPD_W21_RST_0	GPIO_WritePinOutput(GPIOE, 0u, 0)
 #define EPD_W21_RST_1	GPIO_WritePinOutput(GPIOE, 0u, 1)

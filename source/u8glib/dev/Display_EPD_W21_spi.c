@@ -40,7 +40,6 @@ void SPI_Write(unsigned char value)
 
 void EPD_W21_WriteCMD(unsigned char command)
 {
-    //SPI_Delay(1);
     EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 	SPI_Write(command);
@@ -48,7 +47,6 @@ void EPD_W21_WriteCMD(unsigned char command)
 }
 void EPD_W21_WriteDATA(unsigned char command)
 {
-    //SPI_Delay(1);
     EPD_W21_CS_0;
 	EPD_W21_DC_1;		// command write
 	SPI_Write(command);
@@ -87,13 +85,13 @@ void EPD_W21_Write(unsigned char *value, unsigned char datalen)
 	ptemp = value;
 	//DebugInfo("write data or command\n");
 
-    EPD_W21_CS_0;
+        EPD_W21_CS_0;
 	EPD_W21_DC_0;		// command write
 
 	SPI_Write(*ptemp);
 	ptemp++;
 
-	EPD_W21_DC_1;		// data write
+	EPD_W21_DC_1;		// command write
 
 	for(i= 0;i<datalen-1;i++)	// sub the command
 	{
@@ -101,6 +99,7 @@ void EPD_W21_Write(unsigned char *value, unsigned char datalen)
 		ptemp++;
 	}
 
+	//SPI_Delay(100);
 	EPD_W21_CS_1;
 
 }

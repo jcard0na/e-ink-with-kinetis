@@ -88,24 +88,26 @@ void EPD_W21_SetRamPointer(unsigned char addrX,unsigned char addrY,unsigned char
 void EPD_W21_DispInit(void)
 {
 	EPD_W21_Write(GDOControl, sizeof(GDOControl));	// Pannel configuration, Gate selection
-    EPD_W21_Write(softstart, sizeof(softstart));	// voodoo
+	EPD_W21_Write(softstart, sizeof(softstart));	// voodoo
 	EPD_W21_Write(VCOMVol, sizeof(VCOMVol));		// VCOM setting
 	EPD_W21_Write(DummyLine, sizeof(DummyLine));	// dummy line per gate
 	EPD_W21_Write(Gatetime, sizeof(Gatetime));		// Gage time setting
 	EPD_W21_Write(RamDataEntryMode, sizeof(RamDataEntryMode));	// X increase, Y increase
 	EPD_W21_SetRamArea(0x00,0x18,0x00,0x00,0xc7,0x00);	// X-source area,Y-gage area
-    EPD_W21_SetRamPointer(0x00,0x00,0x00);	// set ram
+	EPD_W21_SetRamPointer(0x00,0x00,0x00);	// set ram
 }
 
 static void EPD_SPI_Init()
 {
 #if !USE_BITBANG_SPI
-#error
   	uint32_t sourceClock;
 	spi_master_config_t masterConfig = {0};
 	// Configure SPI Hardware
 	SPI_MasterGetDefaultConfig(&masterConfig);
-	masterConfig.outputMode = kSPI_SlaveSelectAsGpio;
+	masterConfig.outputMode = kSPI_SlaveSelectAutomaticOutput;
+	masterConfig.polarity = kSPI_ClockPolarityActiveLow;
+	//masterConfig.polarity = kSPI_ClockPolarityActiveHigh;
+	masterConfig.phase = kSPI_ClockPhaseSecondEdge;
 	sourceClock = CLOCK_GetFreq(kCLOCK_BusClk);
 	SPI_MasterInit(SPI0, &masterConfig, sourceClock);
 	SPI_EnableFIFO(SPI0, false);

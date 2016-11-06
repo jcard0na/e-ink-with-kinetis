@@ -33,10 +33,11 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 18u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 18u, &pin_as_input);
 
+#if USE_BITBANG_SPI
     /* e-ink e-ink slave select */
     PORT_SetPinMux(PORTE, 16u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 16u, &pin_as_output_high);
-#if USE_BITBANG_SPI
+
     /* e-ink sclk */
     PORT_SetPinMux(PORTE, 17u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 17u, &pin_as_output_high);
@@ -44,6 +45,8 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(PORTE, 19u, kPORT_MuxAsGpio);
     GPIO_PinInit(GPIOE, 19u, &pin_as_output_high);
 #else
+    /* e-ink e-ink slave select */
+    PORT_SetPinMux(PORTE, 16u, kPORT_MuxAlt2);
     /* e-ink spi0_clk */
     PORT_SetPinMux(PORTE, 17u, kPORT_MuxAlt2);
     /* e-ink spi0_mosi, Alt 5 (not Alt 2) */
