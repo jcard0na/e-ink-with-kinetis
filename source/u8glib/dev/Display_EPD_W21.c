@@ -205,7 +205,7 @@ void EPD_W21_WriteRAM(void)
 //Author:
 //Date	: 2011/12/24
 //-------------------------------------------------------
-void EPD_W21_WirteLUT(unsigned char *LUTvalue)
+void EPD_W21_WriteLUT(unsigned char *LUTvalue)
 {
 	EPD_W21_Write(LUTvalue, 31);
 }

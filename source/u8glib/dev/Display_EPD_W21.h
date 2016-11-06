@@ -12,7 +12,7 @@ void EPD_W21_POWERON(void);
 void EPD_W21_Update(void);
 void EPD_W21_EnableChargepump(void);
 void EPD_W21_DisableChargepump(void);
-void EPD_W21_WirteLUT(unsigned char *LUTvalue);
+void EPD_W21_WriteLUT(unsigned char *LUTvalue);
 void EPD_W21_SetRamPointer(unsigned char addrX,unsigned char addrY,unsigned char addrY1);
 void EPD_W21_SetRamArea(unsigned char Xstart,unsigned char Xend,
 						unsigned char Ystart,unsigned char Ystart1,unsigned char Yend,unsigned char Yend1);
