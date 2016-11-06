@@ -80,7 +80,7 @@ void display_circles1()
         pen = 0;
         u8g_SetColorIndex(&u8g, pen);
 
-        for (i = 100; i > 0; i -= 4) {
+        for (i = 100; i > 90; i -= 4) {
             u8g_DrawDisc(&u8g,  100, 100, i, U8G_DRAW_ALL);
             pen = !pen;
             u8g_SetColorIndex(&u8g, pen);
@@ -101,6 +101,23 @@ void display_circles2()
 
         for (i = 1; i < 100; i += 4) {
             u8g_DrawCircle(&u8g,  100, 100, i, U8G_DRAW_ALL);
+        }
+    } while (u8g_NextPage(&u8g));
+}
+
+void display_circles3()
+{
+    int i, pen;
+    u8g_FirstPage(&u8g);
+
+    do {
+        u8g_SetColorIndex(&u8g, 0);
+        u8g_DrawBox(&u8g, 0, 0, WIDTH, HEIGHT);
+        pen = 1;
+        u8g_SetColorIndex(&u8g, pen);
+
+        for (i = 1; i < 100; i += 4) {
+            u8g_DrawDisc(&u8g,  100, 100, i, U8G_DRAW_ALL);
         }
     } while (u8g_NextPage(&u8g));
 }

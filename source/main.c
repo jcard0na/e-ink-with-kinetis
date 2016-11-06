@@ -20,12 +20,13 @@ static void wait()
 }
 
 void (*fn[])() = {
-                   display_circles1,
+                   display_frames3,
+                   /*display_circles1,*/   // This screen uses DrawDisc() which is very slow, skip
                    display_circles2,
+                   /*display_circles3,*/   // DrawDisk(), skip
                    display_ellipses1,
                    display_frames1,
                    display_frames2,
-                   display_frames3,
                    display_main,
                    NULL
 };
