@@ -51,8 +51,10 @@ int main(void)
         fn[i++]();
     }
 
+    i = 0;
     for(;;) { /* Infinite loop to avoid leaving the main function */
         wait();
-        __asm("NOP"); /* something to use as a breakpoint stop while looping */
+        wait();
+        display_counter(i++);
     }
 }

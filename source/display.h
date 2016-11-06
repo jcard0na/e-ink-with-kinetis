@@ -10,5 +10,6 @@ void display_ellipses1();
 void display_frames1();
 void display_frames2();
 void display_frames3();
+void display_counter(int i);
 
 #endif /* DISPLAY_H */

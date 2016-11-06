@@ -69,6 +69,37 @@ void display_main()
     } while (u8g_NextPage(&u8g));
 }
 
+void display_counter(int i)
+{
+    int w, il;
+    char l[11] = "0000000000";
+    u8g_FirstPage(&u8g);
+
+    do {
+        u8g_SetColorIndex(&u8g, 1);
+        u8g_DrawBox(&u8g, 0, 0, WIDTH, HEIGHT);
+        u8g_SetColorIndex(&u8g, 0);
+
+        u8g_SetFont(&u8g, u8g_font_profont22r);
+        u8g_SetFontPosCenter(&u8g);
+        sprintf(l, "%010d", i);
+        il = 100;
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+
+        il += 50;
+        u8g_DrawRBox(&u8g, 35, il - 20, 130, 30, 5);
+        u8g_SetFont(&u8g, u8g_unifont_upper);
+        // This funky font only has defined ascii 10 to 82
+        l[0] = (char) i % 72 + 10;
+        l[1] = '\0';
+        w = u8g_GetStrWidth(&u8g, l);
+        u8g_SetColorIndex(&u8g, 1);
+        u8g_DrawStr(&u8g, WIDTH/2 - w/2, il, l);
+    } while (u8g_NextPage(&u8g));
+}
+
+
 void display_circles1()
 {
     int i, pen;
