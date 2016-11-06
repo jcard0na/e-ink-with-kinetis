@@ -108,6 +108,7 @@ static void EPD_SPI_Init()
 	masterConfig.polarity = kSPI_ClockPolarityActiveLow;
 	//masterConfig.polarity = kSPI_ClockPolarityActiveHigh;
 	masterConfig.phase = kSPI_ClockPhaseSecondEdge;
+	masterConfig.baudRate_Bps = 2000000;	// 2MHz
 	sourceClock = CLOCK_GetFreq(kCLOCK_BusClk);
 	SPI_MasterInit(SPI0, &masterConfig, sourceClock);
 	SPI_EnableFIFO(SPI0, false);

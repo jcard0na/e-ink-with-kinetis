@@ -27,9 +27,8 @@
 // This is ugly and we probably want to investigate
 // using 9-bit SPI tranfers or find a way to know
 // that the data tranfer ended.
-//SPI_Delay(100);
-#define EPD_W21_DC_0	({SPI_Delay(0); GPIO_WritePinOutput(GPIOE, 1u, 0);})
-#define EPD_W21_DC_1	({SPI_Delay(0); GPIO_WritePinOutput(GPIOE, 1u, 1);})
+#define EPD_W21_DC_0	({SPI_Delay(50); GPIO_WritePinOutput(GPIOE, 1u, 0);})
+#define EPD_W21_DC_1	({SPI_Delay(50); GPIO_WritePinOutput(GPIOE, 1u, 1);})
 
 #define EPD_W21_RST_0	GPIO_WritePinOutput(GPIOE, 0u, 0)
 #define EPD_W21_RST_1	GPIO_WritePinOutput(GPIOE, 0u, 1)

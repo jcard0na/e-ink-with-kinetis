@@ -6,8 +6,10 @@ void SPI_Delay(unsigned char xrate)
 	unsigned char i;
 	while(xrate)
 	{
-		for(i=0;i<EPD_W21_SPI_SPEED;i++);
-		xrate--;
+		for(i=0;i<EPD_W21_SPI_SPEED;i++) {
+			xrate--;
+			__asm("nop");
+		}
 	}
 }
 
@@ -121,7 +123,6 @@ void EPD_W21_WriteDispRam(unsigned char XSize,unsigned int YSize,
 	SPI_Write(0x24);
 
 	EPD_W21_DC_1;		// data write
-#if USE_BITBANG_SPI
 	for(i=0;i<YSize;i++)
 	{
 		for(j=0;j<XSize;j++)
@@ -130,10 +131,6 @@ void EPD_W21_WriteDispRam(unsigned char XSize,unsigned int YSize,
 			Dispbuff++;
 		}
 	}
-#else
-	// todo fix polarity
-	SPI_WriteBlocking(SPI0, Dispbuff, XSize * YSize);
-#endif
 
 	EPD_W21_CS_1;
 }
@@ -155,7 +152,6 @@ void EPD_W21_WriteDispRamMono(unsigned char XSize,unsigned int YSize,
 	SPI_Write(0x24);
 
 	EPD_W21_DC_1;		// data write
-#if USE_BITBANG_SPI
 	for(i=0;i<YSize;i++)
 	{
 		for(j=0;j<XSize;j++)
@@ -163,10 +159,6 @@ void EPD_W21_WriteDispRamMono(unsigned char XSize,unsigned int YSize,
 		 SPI_Write(dispdata);
 		}
 	}
-#else
-	for(i=0;i<YSize * XSize;i++)
-		SPI_WriteBlocking(SPI0, &dispdata, 1);
-#endif
 
 	EPD_W21_CS_1;
 }
