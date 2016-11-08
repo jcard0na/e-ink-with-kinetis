@@ -31,6 +31,16 @@ int main(void)
         u8g_FirstPage(&u8g);
         do
         {
+            if (key == 'l') {
+                u8g_SetRot90(&u8g);
+            } else if (key == 'r') {
+                u8g_SetRot270(&u8g);
+            } else if (key == 'u') {
+                u8g_SetRot180(&u8g);
+            } else if (key == 'd') {
+                u8g_UndoRotation(&u8g);
+            }
+
             u8g_SetColorIndex(&u8g, 1);
             u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, WIDTH/2, U8G_DRAW_ALL);
 
