@@ -10,7 +10,7 @@ Explore how to use an e-ink display on a kinetis freedom board.
 1. Attach e-ink devel board to your USB port.
 2. Fire up openocd
 ```
-openocd -f interface/cmsis-dap.cfg -f ./kx.cfg
+openocd -f interface/cmsis-dap.cfg -f target/kx.cfg -c "kx.cpu configure -event gdb-attach { reset init }"
 ```
 3. Build and flash
 ```
