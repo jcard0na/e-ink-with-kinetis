@@ -8,4 +8,4 @@ all: $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) `sdl-config --libs` -o display
 
 clean:	
-	-rm $(OBJ) init_screen
+	-rm $(OBJ)
