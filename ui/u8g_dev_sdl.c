@@ -117,12 +117,6 @@ void u8g_sdl_set_fullcolor(int x, int y, unsigned int r, unsigned int g, unsigne
 
 void u8g_sdl_init(void)
 {
-  if (SDL_Init(SDL_INIT_VIDEO) != 0)
-  {
-    printf("Unable to initialize SDL:  %s\n", SDL_GetError());
-    exit(1);
-  }
-
   /* http://www.libsdl.org/cgi/docwiki.cgi/SDL_SetVideoMode */
   u8g_sdl_screen = SDL_SetVideoMode(WIDTH*u8g_sdl_multiple,HEIGHT*u8g_sdl_multiple,32,SDL_SWSURFACE|SDL_ANYFORMAT);
   if ( u8g_sdl_screen == NULL )

@@ -2,10 +2,12 @@
     check font
 */
 
+
 #include "u8g.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <SDL.h>
 
 #define HEIGHT (200)
 #define WIDTH (200)
@@ -19,11 +21,16 @@ static char second[] = "THE MEANING OF LIFE";
 static char numbers1[] = "1234567890";
 static char numbers2[] = "1234567890";
 
-int main(void)
+int main(int argc, char ** argv)
 {
     u8g_t u8g;
     int w;
-    int key;
+    int key = 0;
+
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        printf("Unable to initialize SDL:  %s\n", SDL_GetError());
+        exit(1);
+    }
 
     u8g_Init(&u8g, &u8g_dev_sdl_1bit);
 
