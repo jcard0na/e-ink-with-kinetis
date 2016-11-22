@@ -23,6 +23,7 @@ do
 	out="${f/.png/.xbm}"
 	convert -monochrome -gravity center -background white -extent 200x200 "$f" "$out"
 	cat $out >> ${OUTFILE}
+	rm -f $out
 	i=$((i+1))
 done
 
@@ -32,9 +33,9 @@ cat >> ${OUTFILE}<<HERE
 struct screen screens[NUM_SCREENS] = {
 HERE
 
-for f in *.xbm;
+for f in *.png;
 do
-	name="${f/.xbm/}"
+	name="${f/.png/}"
 	cat >> ${OUTFILE}<<HERE
 	{ 
 		.x = 0,
