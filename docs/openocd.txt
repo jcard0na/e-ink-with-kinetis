@@ -1,0 +1,2 @@
+
+openocd -f interface/cmsis-dap.cfg -f target/kx.cfg -c "kx.cpu configure -event gdb-attach { reset init }"

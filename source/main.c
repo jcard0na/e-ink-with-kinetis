@@ -13,6 +13,8 @@
 #include "fsl_lptmr.h"
 #include "fsl_llwu.h"
 
+#include "screens.h"
+
 
 static void wait()
 {
@@ -102,7 +104,7 @@ int main(void)
     i = 0;
     for(;;) { /* Infinite loop to avoid leaving the main function */
 	    setWakeupConfig();
-        display_counter(i++);
+        display_screen(i++ % 6);
 		SMC_SetPowerModeVlps(SMC);
     }
     wait();
