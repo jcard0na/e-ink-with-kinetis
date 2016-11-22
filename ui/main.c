@@ -12,22 +12,44 @@
 #include "design/screens_bits.h"
 #include "design/screens.h"
 
+#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define HEIGHT (200)
 #define WIDTH (200)
 
+
 int u8g_sdl_get_key(void);
 
-#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]));
+/* generated with coordinate_calculator.ods */
+static const struct coord {
+    int x;
+    int y;
+} dots[10] = {
+    { 100, 40 },
+    { 135, 51 },
+    { 157, 81 },
+    { 157, 119 },
+    { 135, 149 },
+    { 100, 160 },
+    { 65, 149 },
+    { 43, 119 },
+    { 43, 81 },
+    { 65, 51 },
+};
 
-static char initial[] = "Everytime I find";
-static char second[] = "THE MEANING OF LIFE";
-static char numbers1[] = "1234567890";
-static char numbers2[] = "1234567890";
+static void draw_msgdots(u8g_t *u8g, int num)
+{
+    unsigned int i;
+    const int disc_radius = 10;
+
+    for (i = 0; i < (num % (ARRAY_SIZE(dots) + 1)); i++) {
+        u8g_DrawDisc(u8g, dots[i].x, dots[i].y, disc_radius, U8G_DRAW_ALL);
+    }
+}
 
 int main(int argc, char ** argv)
 {
     u8g_t u8g;
-    int w;
+    int num_msgs = 0;
     int key = 0;
     enum screen_index si = SCREEN1;
 
@@ -56,12 +78,15 @@ int main(int argc, char ** argv)
             u8g_DrawBox(&u8g, 0, 0, WIDTH, HEIGHT);
             u8g_SetColorIndex(&u8g, 0);
             u8g_DrawXBM(&u8g, screens[si].x, screens[si].y, screens[si].w, screens[si].h, screens[si].bits);
+            draw_msgdots(&u8g, num_msgs); 
 
         } while( u8g_NextPage(&u8g) );
 
         while( (key = u8g_sdl_get_key()) < 0 );
         if (key == 'n')
             si = (si + 1) % 6;
+        if (key == 'm')
+            num_msgs = (num_msgs + 1) % (ARRAY_SIZE(dots) + 1);
         printf("key = %d\n", key);
     } while (key != 32);
 
