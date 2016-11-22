@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <SDL.h>
 
+#include "design/screens_bits.h"
+#include "design/screens.h"
+
 #define HEIGHT (200)
 #define WIDTH (200)
 
@@ -26,6 +29,7 @@ int main(int argc, char ** argv)
     u8g_t u8g;
     int w;
     int key = 0;
+    enum screen_index si = SCREEN1;
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         printf("Unable to initialize SDL:  %s\n", SDL_GetError());
@@ -49,38 +53,15 @@ int main(int argc, char ** argv)
             }
 
             u8g_SetColorIndex(&u8g, 1);
-            u8g_DrawDisc(&u8g, WIDTH/2, HEIGHT/2, WIDTH/2, U8G_DRAW_ALL);
-
+            u8g_DrawBox(&u8g, 0, 0, WIDTH, HEIGHT);
             u8g_SetColorIndex(&u8g, 0);
-
-            u8g_SetFont(&u8g, u8g_unifont_upper);
-            u8g_SetFontPosCenter(&u8g);
-            w = u8g_GetStrWidth(&u8g, initial);
-            u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2 - 20, initial);
-
-            u8g_SetFont(&u8g, u8g_font_profont22r);
-            u8g_SetFontPosCenter(&u8g);
-            w = u8g_GetStrWidth(&u8g, initial);
-            u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2, initial);
-
-            u8g_SetFont(&u8g, u8g_font_freedoomr10r);
-            u8g_SetFontPosCenter(&u8g);
-            w = u8g_GetStrWidth(&u8g, second);
-            u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2 + 20, second);
-
-            u8g_SetFont(&u8g, u8g_font_profont22r);
-            u8g_SetFontPosCenter(&u8g);
-            w = u8g_GetStrWidth(&u8g, numbers1);
-            u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2 + 40, numbers1);
-
-            u8g_SetFont(&u8g, u8g_font_freedoomr10r);
-            u8g_SetFontPosCenter(&u8g);
-            w = u8g_GetStrWidth(&u8g, numbers2);
-            u8g_DrawStr(&u8g, WIDTH/2 - w/2, HEIGHT/2 + 60, numbers2);
+            u8g_DrawXBM(&u8g, screens[si].x, screens[si].y, screens[si].w, screens[si].h, screens[si].bits);
 
         } while( u8g_NextPage(&u8g) );
 
         while( (key = u8g_sdl_get_key()) < 0 );
+        if (key == 'n')
+            si = (si + 1) % 6;
         printf("key = %d\n", key);
     } while (key != 32);
 
