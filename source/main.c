@@ -72,8 +72,6 @@ void APP_WAKEUP_BUTTON_IRQ_HANDLER(void)
 {
     if ((1U << APP_WAKEUP_BUTTON_GPIO_PIN) & PORT_GetPinsInterruptFlags(APP_WAKEUP_BUTTON_PORT))
     {
-        /* Disable interrupt. */
-        PORT_SetPinInterruptConfig(APP_WAKEUP_BUTTON_PORT, APP_WAKEUP_BUTTON_GPIO_PIN, kPORT_InterruptOrDMADisabled);
         PORT_ClearPinsInterruptFlags(APP_WAKEUP_BUTTON_PORT, (1U << APP_WAKEUP_BUTTON_GPIO_PIN));
     }
 }
@@ -114,7 +112,9 @@ int main(void)
     NVIC_EnableIRQ(LPTMR0_IRQn);
 #endif /* ENABLE_PERIODIC_WAKEUP */
 
+#ifdef ENABLE_GPIO_WAKEUP
     NVIC_EnableIRQ(PORTC_PORTD_IRQn);
+#endif /* ENABLE_GPIO_WAKEUP */
 
     display_init();
     /*while (fn[i] != NULL) {*/
