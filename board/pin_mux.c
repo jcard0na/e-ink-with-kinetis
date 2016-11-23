@@ -15,6 +15,8 @@ gpio_pin_config_t pin_as_output_low = { kGPIO_DigitalOutput, 0 };
 gpio_pin_config_t pin_as_output_high = { kGPIO_DigitalOutput, 1 };
 gpio_pin_config_t pin_as_input = { kGPIO_DigitalInput, 0 };
 
+port_pin_config_t config;
+
 /* Function Name : BOARD_InitPins */
 void BOARD_InitPins(void)
 {
@@ -55,13 +57,17 @@ void BOARD_InitPins(void)
 
     /* Pin header */
     PORT_SetPinMux(PORTD, 7u, kPORT_MuxAsGpio);
-    GPIO_PinInit(GPIOD, 7u, &pin_as_output_high);
+    GPIO_PinInit(GPIOD, 7u, &pin_as_input);
     PORT_SetPinMux(PORTD, 6u, kPORT_MuxAsGpio);
-    GPIO_PinInit(GPIOD, 6u, &pin_as_output_low);
+    GPIO_PinInit(GPIOD, 6u, &pin_as_input);
     PORT_SetPinMux(PORTD, 5u, kPORT_MuxAsGpio);
-    GPIO_PinInit(GPIOD, 5u, &pin_as_output_high);
-    PORT_SetPinMux(PORTD, 4u, kPORT_MuxAsGpio);
-    GPIO_PinInit(GPIOD, 4u, &pin_as_output_low);
+    GPIO_PinInit(GPIOD, 5u, &pin_as_input);
+
+    config.pullSelect = kPORT_PullDown;
+    config.mux = kPORT_MuxAsGpio;
+    PORT_SetPinConfig(PORTD, 4U, &config);
+
+    GPIO_PinInit(GPIOD, 4u, &pin_as_input);
     PORT_SetPinMux(PORTC, 7u, kPORT_MuxAsGpio);
-    GPIO_PinInit(GPIOC, 7u, &pin_as_output_high);
+    GPIO_PinInit(GPIOC, 7u, &pin_as_input);
 }
