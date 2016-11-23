@@ -96,6 +96,7 @@ void LPTMR0_IRQHandler(void)
 int main(void)
 {
     int i = 0;
+    int j = 0;
     lptmr_config_t lptmrConfig;
 
 
@@ -117,16 +118,15 @@ int main(void)
 #endif /* ENABLE_GPIO_WAKEUP */
 
     display_init();
-    /*while (fn[i] != NULL) {*/
-        /*fn[i++]();*/
-    /*}*/
 
-    i = 0;
     for(;;) { /* Infinite loop to avoid leaving the main function */
-	    setWakeupConfig();
-        display_screen(i++ % 6);
+        setWakeupConfig();
+        if (fn[j])
+            fn[j++]();
+        else
+            display_screen(i++ % 6);
         // In this state the LLWM is disabled.  We will wake up via the regular interrupts (timer or gpio)
-		SMC_SetPowerModeVlps(SMC);
+        SMC_SetPowerModeVlps(SMC);
         //SMC_SetPowerModeLls(SMC);
     }
     wait();
