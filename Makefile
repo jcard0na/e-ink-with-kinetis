@@ -101,7 +101,7 @@ define make-goal
 $1/%.o: %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -D"CPU_MKL43Z256VMP4" -Istartup -Iboard -Iutilities -ICMSIS -Idrivers -std=gnu99 -MMD -MP -MF"$$(@:%.o=%.d)" -MT"$$@" -c -o "$$@" "$$<"
+	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wall  -g3 -D"CPU_MKL17Z256VFM4" -Istartup -Iboard -Iutilities -ICMSIS -Idrivers -std=gnu99 -MMD -MP -MF"$$(@:%.o=%.d)" -MT"$$@" -c -o "$$@" "$$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 endef
