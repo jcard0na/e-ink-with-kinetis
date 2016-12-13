@@ -1,6 +1,6 @@
 
-#for f in *\ *.png; do mv "$f" "${f// /_}"; done
-#for f in *-*.png; do mv "$f" "${f//-/_}"; done
+for f in *\ *.bmp; do mv "$f" "${f// /_}"; done
+for f in *-*.bmp; do mv "$f" "${f//-/_}"; done
 
 OUTFILE=screens_bits.h
 
@@ -18,12 +18,12 @@ struct screen {
 HERE
 
 i=0
-for f in *.png;
+for f in *.bmp;
 do
-	out="${f/.png/.xbm}"
+	out="${f/.bmp/.xbm}"
 	convert -monochrome -gravity center -background white -extent 200x200 "$f" "$out"
-	cat $out >> ${OUTFILE}
-	rm -f $out
+	cat "${out}" >> ${OUTFILE}
+	rm -f "${out}"
 	i=$((i+1))
 done
 
@@ -33,9 +33,9 @@ cat >> ${OUTFILE}<<HERE
 struct screen screens[NUM_SCREENS] = {
 HERE
 
-for f in *.png;
+for f in *.bmp;
 do
-	name="${f/.png/}"
+	name="${f/.bmp/}"
 	cat >> ${OUTFILE}<<HERE
 	{ 
 		.x = 0,

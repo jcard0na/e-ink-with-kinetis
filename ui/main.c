@@ -79,13 +79,13 @@ int main(int argc, char ** argv)
             u8g_DrawBox(&u8g, 0, 0, WIDTH, HEIGHT);
             u8g_SetColorIndex(&u8g, 0);
             u8g_DrawXBM(&u8g, screens[si].x, screens[si].y, screens[si].w, screens[si].h, screens[si].bits);
-            draw_msgdots(&u8g, num_msgs); 
+            draw_msgdots(&u8g, num_msgs);
 
         } while( u8g_NextPage(&u8g) );
 
         while( (key = u8g_sdl_get_key()) < 0 );
         if (key == 'n')
-            si = (si + 1) % 6;
+            si = (si + 1) % NUM_SCREENS;
         if (key == 'm')
             num_msgs = (num_msgs + 1) % (ARRAY_SIZE(dots) + 1);
         printf("key = %d\n", key);
