@@ -9,8 +9,8 @@
 #include "string.h"
 #include "stdio.h"
 #include "display.h"
-#include "screens_bits.h"
 #include "screens.h"
+#include "screens_bits.h"
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define HEIGHT (200)

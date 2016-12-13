@@ -27,13 +27,13 @@ static void wait()
 }
 
 void (*fn[])() = {
-                   display_frames3,
+                   /*display_frames3,*/
                    /*display_circles1,*/   // This screen uses DrawDisc() which is very slow, skip
-                   display_circles2,
+                   /*display_circles2,*/
                    /*display_circles3,*/   // DrawDisk(), skip
-                   display_ellipses1,
-                   display_frames1,
-                   display_frames2,
+                   /*display_ellipses1,*/
+                   /*display_frames1,*/
+                   /*display_frames2,*/
                    display_main,
                    NULL
 };
@@ -124,7 +124,7 @@ int main(void)
         if (fn[j])
             fn[j++]();
         else
-            display_screen(i++ % 6);
+            display_screen(i++ % NUM_SCREENS);
         // In this state the LLWM is disabled.  We will wake up via the regular interrupts (timer or gpio)
         SMC_SetPowerModeVlps(SMC);
         //SMC_SetPowerModeLls(SMC);

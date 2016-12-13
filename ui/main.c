@@ -9,14 +9,12 @@
 #include <stdio.h>
 #include <SDL.h>
 
+#include "design/screens.h"
 #include "design/screens_bits.h"
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define HEIGHT (200)
 #define WIDTH (200)
-
-enum screen_index { SCREEN1 = 0, SCREEN2, SCREEN3, SCREEN4, SCREEN5, SCREEN6 };
-
 
 int u8g_sdl_get_key(void);
 

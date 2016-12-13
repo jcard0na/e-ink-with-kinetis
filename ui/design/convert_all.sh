@@ -3,7 +3,9 @@ for f in *\ *.bmp; do mv "$f" "${f// /_}"; done
 for f in *-*.bmp; do mv "$f" "${f//-/_}"; done
 
 OUTFILE=screens_bits.h
+OUTFILE_PUBLIC=screens.h
 
+# Private include file with the screen bits
 cat > ${OUTFILE}<<HERE
 #pragma arm section rodata = ".text"
 
@@ -29,7 +31,6 @@ done
 
 cat >> ${OUTFILE}<<HERE
 
-#define NUM_SCREENS $i
 struct screen screens[NUM_SCREENS] = {
 HERE
 
@@ -49,3 +50,16 @@ done
 echo '};' >> ${OUTFILE}
 
 sed -i -e 's/^static char/static const unsigned char/' ${OUTFILE}
+
+# Public interface to screens
+echo "#define NUM_SCREENS $i" > ${OUTFILE_PUBLIC}
+echo -n "enum screen_index { SCREEN0 = 0, " >> ${OUTFILE_PUBLIC}
+
+for j in `seq 1 $i`
+do
+    echo -n "SCREEN$j, " >> ${OUTFILE_PUBLIC}
+done
+
+echo '};' >> ${OUTFILE_PUBLIC}
+echo "void display_screen(enum screen_index si);" >> ${OUTFILE_PUBLIC}
+
