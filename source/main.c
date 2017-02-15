@@ -105,7 +105,7 @@ int main(void)
     BOARD_BootClockVLPR();
     BOARD_InitDebugConsole();
 
-#ifdef ENABLE_PERIODIC_WAKEUP
+#if ENABLE_PERIODIC_WAKEUP
     LPTMR_GetDefaultConfig(&lptmrConfig);
     lptmrConfig.prescalerClockSource = kLPTMR_PrescalerClock_1; /* Use LPO as clock source. */
     lptmrConfig.bypassPrescaler = true;
@@ -113,7 +113,7 @@ int main(void)
     NVIC_EnableIRQ(LPTMR0_IRQn);
 #endif /* ENABLE_PERIODIC_WAKEUP */
 
-#ifdef ENABLE_GPIO_WAKEUP
+#if ENABLE_GPIO_WAKEUP
     NVIC_EnableIRQ(PORTC_PORTD_IRQn);
 #endif /* ENABLE_GPIO_WAKEUP */
 
